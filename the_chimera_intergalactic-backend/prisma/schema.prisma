@@ -6,3 +6,28 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String     @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
+  email     String     @unique
+  password  String
+  travelers Traveler[]
+  admins     Admin[]
+}
+
+model Admin {
+  id      String @id @default(dbgenerated("(concat('admin_', gen_random_uuid()))::TEXT"))
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+}
+
+model Traveler {
+  id          String   @id @default(dbgenerated("(concat('traveler_', gen_random_uuid()))::TEXT"))
+  name        String
+  dob         DateTime
+  galaxy      String
+  planet      String
+  profile_pic String
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     String
+}
