@@ -17,6 +17,10 @@ enum LocationType {
   PLANET
 }
 
+enum PackageCategory {
+  ADVENTURE
+  SUMMIT
+}
 
 model User {
   id            String    @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
@@ -46,24 +50,43 @@ model Traveler {
 }
 
 model Location {
-  id          String   @id @default(dbgenerated("(concat('location_', gen_random_uuid()))::TEXT"))
-  name        String
-  description String
-  x           Float
-  y           Float
-  z           Float
-  image       String
+  id           String       @id @default(dbgenerated("(concat('location_', gen_random_uuid()))::TEXT"))
+  name         String
+  description  String
+  x            Float
+  y            Float
+  z            Float
+  image        String
   destinations String[]
-  type        LocationType  @default(PLANET)
+  type         LocationType @default(PLANET)
   activities   Activity[]
 }
 
-
 model Activity {
-  id          String   @id @default(dbgenerated("(concat('activity_', gen_random_uuid()))::TEXT"))
-  name        String
-  description String
-  location_id String
-  location    Location @relation(fields: [location_id], references: [id])
+  id              String            @id @default(dbgenerated("(concat('activity_', gen_random_uuid()))::TEXT"))
+  name            String
+  description     String
+  location_id     String
+  location        Location          @relation(fields: [location_id], references: [id])
+  PackageActivity PackageActivity[]
 }
 
+model Package {
+  id              String            @id @default(dbgenerated("(concat('package_', gen_random_uuid()))::TEXT"))
+  name            String
+  price           Float
+  duration        Float
+  accomadation    String?
+  category        PackageCategory
+  destinations    String[]
+  additional      String[]
+  PackageActivity PackageActivity[]
+}
+
+model PackageActivity {
+  id          String   @id @default(dbgenerated("(concat('package_activity_', gen_random_uuid()))::TEXT"))
+  package_id  String
+  activity_id String
+  package     Package  @relation(fields: [package_id], references: [id])
+  activity    Activity @relation(fields: [activity_id], references: [id])
+}
