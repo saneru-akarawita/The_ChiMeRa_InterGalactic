@@ -45,7 +45,7 @@ export class LocationsService {
 
     activities.forEach(async (activity) => {
       activity.location_id = createdLocation.id;
-      // await this.activitiesService.createActivity(activity);
+      await this.activitiesService.createActivity(activity);
     });
 
     return createdLocation;
