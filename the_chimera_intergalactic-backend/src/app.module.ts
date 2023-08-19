@@ -7,6 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { AuthModule } from './auth/auth.module';
+import { PackagesModule } from './packages/packages.module';
 import { LocationsModule } from './locations/locations.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { LocationsModule } from './locations/locations.module';
     ActivitiesModule,
     AuthModule,
     LocationsModule,
+    PackagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
