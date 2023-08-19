@@ -12,6 +12,12 @@ enum UserType {
   TRAVELER
 }
 
+enum SeatType {
+  FIRST
+  ECONOMY
+  BUSINESS
+}
+
 model User {
   id            String    @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
   email         String    @unique
@@ -37,4 +43,22 @@ model Traveler {
   profile_pic String
   user        User     @relation(fields: [user_id], references: [id])
   user_id     String   @unique
+}
+
+model Ship {
+  id         String @id @default(dbgenerated("(concat('ship_', gen_random_uuid()))::TEXT"))
+  name       String
+  speed      Int
+  model      String
+  identifier String @unique
+  ship_pic   String @default("ship.png")
+  Seat       Seat?
+}
+
+model Seat {
+  id             String   @id @default(dbgenerated("(concat('seat_', gen_random_uuid()))::TEXT"))
+  type           SeatType @default(ECONOMY)
+  booking_status Boolean  @default(false)
+  ship           Ship     @relation(fields: [ship_id], references: [id])
+  ship_id        String   @unique
 }
