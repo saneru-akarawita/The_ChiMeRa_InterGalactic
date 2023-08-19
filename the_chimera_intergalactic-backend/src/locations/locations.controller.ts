@@ -8,7 +8,6 @@ export class LocationsController {
 
   @Post('create')
   async createLocation(@Body() locationDto: CreateLocationDto) {
-    // console.log({ locationDto });
     const res = await this.locationService.createLocation(locationDto);
     return res;
   }
