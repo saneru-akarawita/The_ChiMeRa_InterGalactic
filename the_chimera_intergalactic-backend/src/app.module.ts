@@ -21,6 +21,7 @@ import { SeatsModule } from './seats/seats.module';
     ConfigModule.forRoot({ isGlobal: true }),
     ActivitiesModule,
     AuthModule,
+    LocationsModule,
     PackagesModule,
     LocationsModule,
     SeatsModule,

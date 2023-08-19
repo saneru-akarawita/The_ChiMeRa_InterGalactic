@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import ImageKit from 'imagekit';
@@ -33,6 +34,27 @@ export class FileUploaderService {
       const result = await this.imagekit.upload({
         file: imageFile.buffer,
         fileName: imageFile.originalName,
+        folder: `/intergalactic/${subDir ? subDir : ''}/images`,
+      });
+      return result.url;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  /**
+   * Uploads and returns the public url of an image
+   * @param imageFile
+   */
+  async uploadImageBase64(
+    imageFile: string,
+    subDir?: string,
+  ): Promise<string | false> {
+    try {
+      const result = await this.imagekit.upload({
+        file: Buffer.from(imageFile, 'base64'),
+        fileName: String(new Date().getTime()),
         folder: `/intergalactic/${subDir ? subDir : ''}/images`,
       });
       return result.url;
