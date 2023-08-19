@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { PackagesModule } from './packages/packages.module';
 import { LocationsModule } from './locations/locations.module';
 import { ShipsModule } from './ships/ships.module';
+import { SeatsModule } from './seats/seats.module';
 
 @Module({
   imports: [
@@ -21,6 +22,8 @@ import { ShipsModule } from './ships/ships.module';
     ActivitiesModule,
     AuthModule,
     PackagesModule,
+    LocationsModule,
+    SeatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
