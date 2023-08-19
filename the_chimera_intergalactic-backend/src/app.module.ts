@@ -7,10 +7,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { AuthModule } from './auth/auth.module';
-import { PackageModule } from './packages/package.module';
+import { PackagesModule } from './packages/packages.module';
 
 @Module({
-<<<<<<< HEAD
   imports: [
     PrismaModule,
     UsersModule,
@@ -18,10 +17,8 @@ import { PackageModule } from './packages/package.module';
     ConfigModule.forRoot({ isGlobal: true }),
     ActivitiesModule,
     AuthModule,
+    PackagesModule,
   ],
-=======
-  imports: [PrismaModule, UsersModule, NestjsFormDataModule.config({isGlobal: true}), ConfigModule.forRoot({ isGlobal: true }), ActivitiesModule, AuthModule, PackageModule],
->>>>>>> 86ac510 (Feature: add package creation path with a dto)
   controllers: [AppController],
   providers: [AppService],
 })

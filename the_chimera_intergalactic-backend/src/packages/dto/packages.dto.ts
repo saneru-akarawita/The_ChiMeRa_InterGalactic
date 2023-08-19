@@ -1,22 +1,20 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 enum PackageCategory {
-    'adventure',
-    'summit',
+  'adventure',
+  'summit',
 }
 
 export class PackageDto {
+  @IsString()
+  @IsNotEmpty()
+  readonly name: string;
 
-    @IsString()
-    @IsNotEmpty()
-    readonly name: string;
+  @IsBoolean()
+  readonly warp_drive: boolean;
 
-    @IsBoolean()
-    readonly warp_drive: boolean;
-
-    @IsEnum(PackageCategory, {
-        message: `Selected category doesn't exist`
-    })
-    readonly category: PackageCategory;
+  @IsEnum(PackageCategory, {
+    message: `Selected category doesn't exist`,
+  })
+  readonly category: PackageCategory;
 }
-
