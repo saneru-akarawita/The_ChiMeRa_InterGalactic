@@ -1,4 +1,11 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 enum PackageCategory {
   'adventure',
@@ -17,4 +24,11 @@ export class PackageDto {
     message: `Selected category doesn't exist`,
   })
   readonly category: PackageCategory;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  readonly destinations: string[];
+
+  @IsString()
+  readonly accomadation: string;
 }
