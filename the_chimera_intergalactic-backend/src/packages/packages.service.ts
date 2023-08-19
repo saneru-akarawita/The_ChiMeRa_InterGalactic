@@ -7,7 +7,7 @@ export class PackagesService {
   async createPackage() {
     return 'create package';
   }
-  async retrievePackage() {
+  async retrievePackages() {
     return 'retrieve package';
   }
 }

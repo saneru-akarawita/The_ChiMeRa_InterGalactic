@@ -18,7 +18,7 @@ export class PackagesController {
   }
   @UseGuards(AccessTokenGuard)
   @Get('retrieve')
-  async retrievePackagea() {
-    return this.packagesService.retrievePackage();
+  async retrievePackages() {
+    return this.packagesService.retrievePackages();
   }
 }
