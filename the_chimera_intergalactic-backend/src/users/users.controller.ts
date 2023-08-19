@@ -10,9 +10,4 @@ import { CreateTravelerDto } from './dto/create-traveler.dto';
 })
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
-
-  @Post("/admins")
-  createAdmin(@Body() createAdminDto: CreateAdminDto) {
-    return this.usersService.createAdmin(createAdminDto);
-  }
 }
