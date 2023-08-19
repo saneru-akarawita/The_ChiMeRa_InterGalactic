@@ -8,4 +8,6 @@ export class CreateActivityDto {
   @IsNotEmpty()
   @IsString()
   readonly description: string;
+
+  location_id: string;
 }

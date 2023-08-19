@@ -6,16 +6,12 @@ import {
   IsNumber,
   IsString,
   ValidateNested,
-  isArray,
 } from 'class-validator';
-import {
-  HasMimeType,
-  IsFile,
-  MaxFileSize,
-  MemoryStoredFile,
-} from 'nestjs-form-data';
+import { MemoryStoredFile } from 'nestjs-form-data';
 import { CreateActivityDto } from 'src/activities/dto/create-activity.dto';
 import { IsValidType } from 'src/validators';
+import { LocationType } from '@prisma/client';
+
 export class CreateLocationDto {
   @IsNotEmpty()
   @IsString()
@@ -42,22 +38,22 @@ export class CreateLocationDto {
 
   @IsNotEmpty()
   @IsString()
-  @IsValidType(['Asteroid', 'Planet'], { message: 'Invalid location type' })
-  readonly type: string;
+  @IsValidType(Object.values(LocationType), {
+    message: 'Invalid location type',
+  })
+  readonly type: LocationType;
 
-  @IsFile()
-  @MaxFileSize(1e7)
-  @HasMimeType(['image/jpeg', 'image/png'])
-  readonly image: MemoryStoredFile;
+  // TODO: Validate this
+  readonly image: string;
 
   @IsArray()
-  @ArrayMinSize(2)
+  @ArrayMinSize(1)
   @IsString({ each: true })
   readonly destinations: string[];
 
-  // @IsArray()
-  // @ArrayMinSize(2)
-  // @ValidateNested({ each: true })
-  // @Type(() => CreateActivityDto)
-  // readonly activities: CreateActivityDto[]
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => CreateActivityDto)
+  readonly activities: CreateActivityDto[];
 }
