@@ -38,3 +38,13 @@ model Traveler {
   user        User     @relation(fields: [user_id], references: [id])
   user_id     String   @unique
 }
+
+// model Location {
+//   id          String   @id @default(dbgenerated("(concat('traveler_', gen_random_uuid()))::TEXT"))
+//   name        String
+//   description String
+//   x           Float
+//   y           Float
+//   z           Float
+//   image       String
+// }
