@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import * as bodyParser from 'body-parser';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -17,6 +18,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors();
   app.use(cookieParser());
+  app.use(bodyParser.json({ limit: '10mb' }));
 
   // enable body validation globally
   app.useGlobalPipes(

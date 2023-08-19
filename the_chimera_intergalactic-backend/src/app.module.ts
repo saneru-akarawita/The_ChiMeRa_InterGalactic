@@ -17,6 +17,7 @@ import { LocationsModule } from './locations/locations.module';
     ConfigModule.forRoot({ isGlobal: true }),
     ActivitiesModule,
     AuthModule,
+    LocationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
