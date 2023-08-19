@@ -40,8 +40,5 @@ export class CreateShipDto {
   @Type(() => CreatSeatOnShip)
   seats: CreatSeatOnShip[];
 
-  @IsFile()
-  @MaxFileSize(1e7)
-  @HasMimeType(['image/jpeg', 'image/png'])
-  readonly ship_picture: MemoryStoredFile;
+  readonly ship_picture: string;
 }

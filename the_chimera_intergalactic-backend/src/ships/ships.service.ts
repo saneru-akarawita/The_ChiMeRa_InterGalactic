@@ -13,6 +13,7 @@ export class ShipsService {
     const { name, model, speed, identifier, ship_picture, seats, start, end } =
       createShipDto;
 
+    const imageUrl = await this.fileUploader.uploadImageBase64(ship_picture);
     const createdShip = await this.prisma.ship.create({
       data: {
         name,
@@ -21,7 +22,7 @@ export class ShipsService {
         start,
         end,
         identifier,
-        ship_pic: ship_picture.originalName,
+        ship_pic: imageUrl ? imageUrl : '',
       },
     });
     seats.map(async (seat) => {
@@ -38,20 +39,7 @@ export class ShipsService {
       }
     });
 
-    const shipPicURL = await this.fileUploader.uploadImage(ship_picture);
-
-    if (shipPicURL) {
-      return this.prisma.ship.update({
-        where: {
-          id: createdShip.id,
-        },
-        data: {
-          ship_pic: shipPicURL,
-        },
-      });
-    } else {
-      return createdShip;
-    }
+    return createdShip;
   }
 
   getShipByIdentifier(identifier: string) {

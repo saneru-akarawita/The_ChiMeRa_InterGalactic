@@ -106,7 +106,7 @@ model Ship {
   end        String
   identifier String @unique
   ship_pic   String @default("ship.png")
-  Seat       Seat?
+  seat       Seat[]
 }
 
 model Seat {
@@ -114,5 +114,5 @@ model Seat {
   type           SeatType @default(ECONOMY)
   booking_status Boolean  @default(false)
   ship           Ship     @relation(fields: [ship_id], references: [id])
-  ship_id        String   @unique
+  ship_id        String
 }
