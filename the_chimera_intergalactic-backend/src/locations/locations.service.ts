@@ -11,7 +11,6 @@ export class LocationsService {
   ) {}
 
   async createLocation(createLocationDto: CreateLocationDto) {
-
-    const { name, description, x, y, z, type, image } = createLocationDto
+    const { name, description, x, y, z, type, image } = createLocationDto;
   }
 }

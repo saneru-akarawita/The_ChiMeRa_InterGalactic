@@ -17,7 +17,10 @@ export class IsValidTypeConstraint implements ValidatorConstraintInterface {
   }
 }
 
-export function IsValidType(property: Array<string>, validationOptions?: ValidationOptions) {
+export function IsValidType(
+  property: Array<string>,
+  validationOptions?: ValidationOptions,
+) {
   return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
       target: object.constructor,

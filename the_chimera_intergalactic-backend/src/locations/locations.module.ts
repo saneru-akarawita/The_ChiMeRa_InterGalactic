@@ -7,6 +7,6 @@ import { UtilitiesModule } from 'src/utilities/utilities.module';
 @Module({
   imports: [PrismaModule, UtilitiesModule],
   controllers: [LocationsController],
-  providers: [LocationsService]
+  providers: [LocationsService],
 })
 export class LocationsModule {}
