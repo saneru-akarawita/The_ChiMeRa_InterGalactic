@@ -11,12 +11,6 @@ import { CreateTravelerDto } from './dto/create-traveler.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
-  @Post()
-  @FormDataRequest()
-  createTraveler(@Body() createTravelerDto: CreateTravelerDto) {
-    return this.usersService.createTraveler(createTravelerDto);
-  }
-
   @Post("/admins")
   createAdmin(@Body() createAdminDto: CreateAdminDto) {
     return this.usersService.createAdmin(createAdminDto);

@@ -7,12 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserType {
+  ADMIN
+  TRAVELER
+}
+
 model User {
-  id       String    @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
-  email    String    @unique
-  password String
-  traveler Traveler?
-  admin    Admin?
+  id            String    @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
+  email         String    @unique
+  password      String
+  refresh_token String?
+  user_type     UserType  @default(TRAVELER)
+  traveler      Traveler?
+  admin         Admin?
 }
 
 model Admin {

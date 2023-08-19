@@ -8,6 +8,7 @@ import { CreateTravelerDto } from './dto/create-traveler.dto';
 @Injectable()
 export class UsersService {
 
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly fileUploader: FileUploaderService
@@ -15,32 +16,13 @@ export class UsersService {
 
   }
 
-  createAdmin(createAdminDto: CreateAdminDto) {
-    throw new Error('Method not implemented.');
-  }
 
   async createTraveler(createTravelerDto: CreateTravelerDto) {
 
     const { dob, email, galaxy, name, password, confirm_password, planet, profile_picture, terms } = createTravelerDto
 
-    if (password !== confirm_password) {
-      throw new BadRequestException(
-        {
-          message: ["Password and Confirm Password must match"],
-          error: "Bad Request",
-          statusCode: 400
-        })
-    }
-
-    if (!terms) {
-      throw new BadRequestException("You must agree to Terms and conditions")
-    }
-
     const hashedPassword = await hash(password, 12);
     const generated_dob = new Date(dob);
-
-    console.log(profile_picture.originalName)
-
 
     const createdTraveler = await this.prisma.user.create({
       data: {
@@ -80,5 +62,71 @@ export class UsersService {
     else {
       return createdTraveler
     }
+  }
+
+
+  getTravelerByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        email,
+        user_type: 'TRAVELER'
+      },
+      include: {
+        traveler: true,
+      }
+    })
+  }
+
+
+  async createAdmin(createAdminDto: CreateAdminDto) {
+
+    const { email, password, confirm_password } = createAdminDto
+
+    const hashedPassword = await hash(password, 12);
+
+    return this.prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        user_type: 'ADMIN',
+        admin: {
+          create: {
+          }
+        }
+      }
+    });
+
+  }
+
+  
+  getAdminByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        email,
+        user_type: 'ADMIN'
+      },
+      include: {
+        admin: true,
+      }
+    })
+  }
+
+  findUserById(id: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        id
+      }
+    })
+  }
+
+  async updateRefreshToken(userId: string, refreshToken: string | null) {
+    return this.prisma.user.update({
+      data: {
+        refresh_token: refreshToken
+      },
+      where: {
+        id: userId
+      }
+    })
   }
 }

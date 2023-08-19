@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { BadRequestException, ValidationPipe, VersioningType } from '@nestjs/common'
-import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser'
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,7 @@ async function bootstrap() {
   })
   app.setGlobalPrefix("api")
   app.enableCors()
+  app.use(cookieParser())
 
   // enable body validation globally
   app.useGlobalPipes(new ValidationPipe({
