@@ -1,6 +1,14 @@
-import { Body, Controller, Post, Res, Req, Get, UseGuards } from '@nestjs/common';
-import { Response, Request } from 'express'
-import type { JwtPayload, JwtRefreshPayload } from "src/types"
+import {
+  Body,
+  Controller,
+  Post,
+  Res,
+  Req,
+  Get,
+  UseGuards,
+} from '@nestjs/common';
+import { Response, Request } from 'express';
+import type { JwtPayload, JwtRefreshPayload } from 'src/types';
 import { AuthService } from './auth.service';
 import { FormDataRequest } from 'nestjs-form-data';
 import { CreateTravelerDto } from 'src/users/dto/create-traveler.dto';
@@ -11,13 +19,17 @@ import { RefreshTokenGuard } from './guards/refresh-token.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
-
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   @FormDataRequest()
-  async createTraveler(@Body() createTravelerDto: CreateTravelerDto, @Res() res: Response) {
-    const { accessToken, refreshToken } = await this.authService.signUpTraveler(createTravelerDto);
+  async createTraveler(
+    @Body() createTravelerDto: CreateTravelerDto,
+    @Res() res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.authService.signUpTraveler(
+      createTravelerDto,
+    );
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -31,9 +43,11 @@ export class AuthController {
 
   @Post('signin')
   async signin(@Body() loginDto: TravelerLoginDto, @Res() res: Response) {
-    const { accessToken, refreshToken } = await this.authService.signInTraveler(loginDto);
+    const { accessToken, refreshToken } = await this.authService.signInTraveler(
+      loginDto,
+    );
 
-    const { remember_me } = loginDto
+    const { remember_me } = loginDto;
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -43,19 +57,30 @@ export class AuthController {
     });
 
     // set a cookie mentioning the expire time of the refresh token to later check if it was a remember me login or regular login
-    res.cookie('refreshTokenExpireTime', remember_me ? 365 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000, {
-      httpOnly: true,
-      path: '/',
-      // 7 day expiration or if remember_me is true, 1 year expiration
-      maxAge: remember_me ? 365 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie(
+      'refreshTokenExpireTime',
+      remember_me ? 365 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000,
+      {
+        httpOnly: true,
+        path: '/',
+        // 7 day expiration or if remember_me is true, 1 year expiration
+        maxAge: remember_me
+          ? 365 * 24 * 60 * 60 * 1000
+          : 7 * 24 * 60 * 60 * 1000,
+      },
+    );
 
     res.send({ accessToken });
   }
 
   @Post('admin-signup')
-  async createAdmin(@Body() createAdminDto: CreateAdminDto, @Res() res: Response) {
-    const { accessToken, refreshToken } = await this.authService.signUpAdmin(createAdminDto);
+  async createAdmin(
+    @Body() createAdminDto: CreateAdminDto,
+    @Res() res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.authService.signUpAdmin(
+      createAdminDto,
+    );
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -69,9 +94,11 @@ export class AuthController {
 
   @Post('admin-signin')
   async signinAdmin(@Body() loginDto: AdminLoginDto, @Res() res: Response) {
-    const { accessToken, refreshToken } = await this.authService.signInAdmin(loginDto);
+    const { accessToken, refreshToken } = await this.authService.signInAdmin(
+      loginDto,
+    );
 
-    const { remember_me } = loginDto
+    const { remember_me } = loginDto;
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -80,16 +107,19 @@ export class AuthController {
       maxAge: remember_me ? 365 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000,
     });
 
-
-
     // set a cookie mentioning the expire time of the refresh token to later check if it was a remember me login or regular login
-    res.cookie('refreshTokenExpireTime', remember_me ? 365 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000, {
-      httpOnly: true,
-      path: '/',
-      // 7 day expiration or if remember_me is true, 1 year expiration
-      maxAge: remember_me ? 365 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000,
-    });
-
+    res.cookie(
+      'refreshTokenExpireTime',
+      remember_me ? 365 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000,
+      {
+        httpOnly: true,
+        path: '/',
+        // 7 day expiration or if remember_me is true, 1 year expiration
+        maxAge: remember_me
+          ? 365 * 24 * 60 * 60 * 1000
+          : 7 * 24 * 60 * 60 * 1000,
+      },
+    );
 
     res.send({ accessToken });
   }
@@ -121,7 +151,8 @@ export class AuthController {
     const refreshToken = user['refreshToken'];
     const userId = user['id'];
     const expireTime = user['refreshTokenExpireTime'];
-    const { accessToken, refreshToken: refresh_token, } = await this.authService.refreshTokens(userId, refreshToken);
+    const { accessToken, refreshToken: refresh_token } =
+      await this.authService.refreshTokens(userId, refreshToken);
 
     res.cookie('refreshToken', refresh_token, {
       httpOnly: true,
@@ -137,5 +168,4 @@ export class AuthController {
 
     res.send({ accessToken });
   }
-
 }

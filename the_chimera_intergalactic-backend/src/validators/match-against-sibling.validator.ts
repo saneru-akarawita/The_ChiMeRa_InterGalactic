@@ -1,5 +1,11 @@
-import { ClassConstructor } from "class-transformer";
-import { ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface, registerDecorator } from "class-validator";
+import { ClassConstructor } from 'class-transformer';
+import {
+  ValidationArguments,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  registerDecorator,
+} from 'class-validator';
 
 export const MatchAgainstSibling = <T>(
   type: ClassConstructor<T>,
@@ -17,8 +23,10 @@ export const MatchAgainstSibling = <T>(
   };
 };
 
-@ValidatorConstraint({ name: "MatchAgainstSibling" })
-export class MatchAgainstSiblingConstraint implements ValidatorConstraintInterface {
+@ValidatorConstraint({ name: 'MatchAgainstSibling' })
+export class MatchAgainstSiblingConstraint
+  implements ValidatorConstraintInterface
+{
   validate(value: any, args: ValidationArguments) {
     const [fn] = args.constraints;
     return fn(args.object) === value;
