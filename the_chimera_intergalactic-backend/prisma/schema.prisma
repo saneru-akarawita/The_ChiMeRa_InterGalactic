@@ -12,6 +12,12 @@ enum UserType {
   TRAVELER
 }
 
+enum LocationType {
+  ASTEROID
+  PLANET
+}
+
+
 model User {
   id            String    @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
   email         String    @unique
@@ -39,12 +45,24 @@ model Traveler {
   user_id     String   @unique
 }
 
-// model Location {
-//   id          String   @id @default(dbgenerated("(concat('traveler_', gen_random_uuid()))::TEXT"))
-//   name        String
-//   description String
-//   x           Float
-//   y           Float
-//   z           Float
-//   image       String
-// }
+model Location {
+  id          String   @id @default(dbgenerated("(concat('location_', gen_random_uuid()))::TEXT"))
+  name        String
+  description String
+  x           Float
+  y           Float
+  z           Float
+  image       String
+  type        LocationType  @default(PLANET)
+  activities   Activity[]
+}
+
+
+model Activity {
+  id          String   @id @default(dbgenerated("(concat('activity_', gen_random_uuid()))::TEXT"))
+  name        String
+  description String
+  location_id String
+  location    Location @relation(fields: [location_id], references: [id])
+}
+
