@@ -28,6 +28,12 @@ enum SeatType {
   BUSINESS
 }
 
+enum BookingStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETED
+}
+
 model User {
   id            String    @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
   email         String    @unique
@@ -36,6 +42,7 @@ model User {
   user_type     UserType  @default(TRAVELER)
   traveler      Traveler?
   admin         Admin?
+  Booking       Booking[]
 }
 
 model Admin {
@@ -66,6 +73,7 @@ model Location {
   destinations String[]
   type         LocationType @default(PLANET)
   activities   Activity[]
+  Package      Package[]
 }
 
 model Activity {
@@ -81,19 +89,23 @@ model Package {
   id              String            @id @default(dbgenerated("(concat('package_', gen_random_uuid()))::TEXT"))
   name            String
   price           Float
+  warp_drive      Boolean
   duration        Float
-  accomadation    String?
+  accomodation    String?
   category        PackageCategory
   destinations    String[]
   additional      String[]
   PackageActivity PackageActivity[]
+  location_id     String
+  location        Location          @relation(fields: [location_id], references: [id])
+  Booking         Booking[]
 }
 
 model PackageActivity {
   id          String   @id @default(dbgenerated("(concat('package_activity_', gen_random_uuid()))::TEXT"))
   package_id  String
   activity_id String
-  package     Package  @relation(fields: [package_id], references: [id])
+  package     Package  @relation(fields: [package_id], references: [id], onDelete: Cascade)
   activity    Activity @relation(fields: [activity_id], references: [id])
 }
 
@@ -110,10 +122,26 @@ model Ship {
 }
 
 model Seat {
-  id             String   @id @default(dbgenerated("(concat('seat_', gen_random_uuid()))::TEXT"))
-  type           SeatType @default(ECONOMY)
-  booking_status Boolean  @default(false)
-  ship           Ship     @relation(fields: [ship_id], references: [id])
+  id             String    @id @default(dbgenerated("(concat('seat_', gen_random_uuid()))::TEXT"))
+  type           SeatType  @default(ECONOMY)
+  booking_status Boolean   @default(false)
+  ship           Ship      @relation(fields: [ship_id], references: [id])
   ship_id        String
-  price          Float    @default(0.00)
+  price          Float     @default(0.00)
+  Booking        Booking[]
+}
+
+model Booking {
+  id             String   @id @default(dbgenerated("(concat('booking_', gen_random_uuid()))::TEXT"))
+  booking_date   DateTime
+  starting_date  DateTime
+  finishing_date DateTime
+  payment_amount Float
+  user_id        String
+  package_id     String
+  seat_id        String
+  status         BookingStatus @default(ACTIVE)
+  user           User     @relation(fields: [user_id], references: [id])
+  package        Package  @relation(fields: [package_id], references: [id])
+  seat           Seat     @relation(fields: [seat_id], references: [id])
 }

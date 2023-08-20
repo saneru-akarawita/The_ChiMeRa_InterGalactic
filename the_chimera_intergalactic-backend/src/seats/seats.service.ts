@@ -28,8 +28,8 @@ export class SeatsService {
     return count;
   }
 
-  bookASeat(id: string) {
-    return this.prisma.seat.update({
+  async bookASeat(id: string) {
+    return await this.prisma.seat.update({
       where: {
         id,
       },
@@ -39,23 +39,23 @@ export class SeatsService {
     });
   }
 
-  findSeatById(id: string) {
-    return this.prisma.seat.findUnique({
+  async findSeatById(id: string) {
+    return await this.prisma.seat.findUnique({
       where: {
         id,
       },
     });
   }
 
-  findSeatsByShip(ship_id: string) {
-    return this.prisma.seat.findMany({
+  async findSeatsByShip(ship_id: string) {
+    return await this.prisma.seat.findMany({
       where: {
         ship_id,
       },
     });
   }
 
-  findSeatsByShipIdentifier(identifier: string) {
-    return this.shipService.getShipByIdentifier(identifier).seat();
+  async findSeatsByShipIdentifier(identifier: string) {
+    return await this.shipService.getShipByIdentifier(identifier).seat();
   }
 }
