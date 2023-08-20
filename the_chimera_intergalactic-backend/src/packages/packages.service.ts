@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { PackageDto } from './dto/packages.dto';
-import { DeletePackageDto } from './dto/packages.delete.dto';
 
 @Injectable()
 export class PackagesService {
@@ -82,8 +81,7 @@ export class PackagesService {
       throw error;
     }
   }
-  async deletePackage(deletePackage: DeletePackageDto) {
-    const package_id = deletePackage.package_id;
+  async deletePackage(package_id: string) {
     try {
       const deletedPackage = await this.prisma.package.deleteMany({
         where: {

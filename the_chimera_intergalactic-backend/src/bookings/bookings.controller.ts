@@ -2,8 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -15,7 +16,6 @@ import { Request, Response } from 'express';
 import { JwtPayload } from 'src/types';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
-import { GetSingleBookingDto } from './dto/bookings.get.dto';
 
 @Controller('bookings')
 export class BookingsController {
@@ -65,16 +65,35 @@ export class BookingsController {
       });
   }
   @UseGuards(AccessTokenGuard)
-  @Get('single')
+  @Get(':booking_id')
   async getSingleBooking(
-    @Query() bookingDto: GetSingleBookingDto,
+    @Param('booking_id') booking_id: string,
     @Res() res: Response,
   ) {
     this.bookingsService
-      .getSingleBooking(bookingDto.booking_id)
+      .getSingleBooking(booking_id)
       .then((result) => {
         res.status(200).json({
           message: 'Booking retrieved successfully',
+          data: result,
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          message: err.message,
+        });
+      });
+  }
+  @Patch('cancel/:booking_id')
+  async cancelBooking(
+    @Param('booking_id') booking_id: string,
+    @Res() res: Response,
+  ) {
+    this.bookingsService
+      .cancelBooking(booking_id)
+      .then((result) => {
+        res.status(200).json({
+          message: 'Booking cancelled successfully',
           data: result,
         });
       })

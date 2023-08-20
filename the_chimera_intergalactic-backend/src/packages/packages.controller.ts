@@ -3,8 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
-  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -14,11 +14,6 @@ import { Roles } from 'src/auth/decorators/role.decorator';
 import { PackagesService } from './packages.service';
 import { PackageDto } from './dto/packages.dto';
 import { Response } from 'express';
-import { DeletePackageDto } from './dto/packages.delete.dto';
-import {
-  PackageGetByLocationDto,
-  PackageGetSingleDto,
-} from './dto/packages.get.dto';
 
 @Controller('packages')
 export class PackagesController {
@@ -44,13 +39,13 @@ export class PackagesController {
       });
   }
   @UseGuards(AccessTokenGuard)
-  @Get('get/location')
+  @Get('get/location/:location_id')
   async retrievePackagesByLocation(
-    @Query() query: PackageGetByLocationDto,
+    @Param('location_id') location_id: string,
     @Res() res: Response,
   ) {
     this.packagesService
-      .retrievePackagesByLocation(query.location_id)
+      .retrievePackagesByLocation(location_id)
       .then((packages) => {
         console.log(packages);
         res.send(packages);
@@ -62,13 +57,13 @@ export class PackagesController {
       });
   }
   @UseGuards(AccessTokenGuard)
-  @Get('get/single')
+  @Get('get/:package_id')
   async retrieveSinglePackage(
-    @Query() query: PackageGetSingleDto,
+    @Param('package_id') package_id: string,
     @Res() res: Response,
   ) {
     this.packagesService
-      .retrieveSinglePackage(query.package_id)
+      .retrieveSinglePackage(package_id)
       .then((data) => {
         console.log(data);
         res.send(data);
@@ -82,13 +77,13 @@ export class PackagesController {
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @UseGuards(AccessTokenGuard)
-  @Delete('delete')
+  @Delete('delete/:package_id')
   async deletePackage(
-    @Query() deletePackageDto: DeletePackageDto,
+    @Param('package_id') package_id: string,
     @Res() res: Response,
   ) {
     this.packagesService
-      .deletePackage(deletePackageDto)
+      .deletePackage(package_id)
       .then((deletedPackage) => {
         console.log(deletedPackage);
         if (deletedPackage.count === 0) {
