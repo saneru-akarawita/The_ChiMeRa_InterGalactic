@@ -52,3 +52,5 @@ This Repository contains the documentation, code files, readme files, diagrams a
     npm run dev
     ```
 - open up a web browser and navigate to localhost:3001
+
+#### note: all the validations are being handled at the DTO level and not in the business logic level.
