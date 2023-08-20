@@ -28,6 +28,12 @@ enum SeatType {
   BUSINESS
 }
 
+enum BookingStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETED
+}
+
 model User {
   id            String    @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
   email         String    @unique
@@ -134,7 +140,7 @@ model Booking {
   user_id        String
   package_id     String
   seat_id        String
-  status         Boolean  @default(false)
+  status         BookingStatus @default(ACTIVE)
   user           User     @relation(fields: [user_id], references: [id])
   package        Package  @relation(fields: [package_id], references: [id])
   seat           Seat     @relation(fields: [seat_id], references: [id])
