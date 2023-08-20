@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { LocationsService } from './locations.service';
@@ -15,18 +16,27 @@ import { Location } from '@prisma/client';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { Response } from 'express';
 import { GetCheckpointDto } from './dto/get-checkpoint.dto';
+import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/decorators/role.decorator';
 
 @Controller('locations')
 export class LocationsController {
   constructor(private readonly locationService: LocationsService) {}
 
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @UseGuards(AccessTokenGuard)
   @Post('create')
   async createLocation(@Body() locationDto: CreateLocationDto) {
     const res = await this.locationService.createLocation(locationDto);
     return res;
   }
 
-  @Get('calc')
+  @Roles('TRAVELER')
+  @UseGuards(RolesGuard)
+  @UseGuards(AccessTokenGuard)
+  @Get('checkpoints')
   async calc(@Body() getCheckpointDto: GetCheckpointDto) {
     const checkpoints = await this.locationService.getCheckPoints(
       getCheckpointDto,
@@ -34,6 +44,9 @@ export class LocationsController {
     return { checkpoints };
   }
 
+  @Roles('TRAVELER', 'ADMIN')
+  @UseGuards(RolesGuard)
+  @UseGuards(AccessTokenGuard)
   @Get(':id')
   async getLocation(@Param('id') id: string): Promise<object> {
     const location: Location | null =
@@ -42,6 +55,9 @@ export class LocationsController {
     return { location };
   }
 
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @UseGuards(AccessTokenGuard)
   @Put(':id')
   async updateLocation(
     @Param('id') id: string,
@@ -62,6 +78,9 @@ export class LocationsController {
     response.send({ updated_location: updateLocation });
   }
 
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @UseGuards(AccessTokenGuard)
   @Delete(':id')
   async deleteLocation(@Param('id') id: string, @Res() response: Response) {
     let deletedLocation;
