@@ -4,6 +4,8 @@ import { FileUploaderService } from 'src/utilities/file-uploader.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { Location } from 'prisma/prisma-client';
 import { ActivitiesService } from 'src/activities/activities.service';
+import { UpdateLocationDto } from './dto/update-location.dto';
+import { UpdateActivityDto } from 'src/activities/dto/update-activity.dto';
 
 @Injectable()
 export class LocationsService {
@@ -49,5 +51,39 @@ export class LocationsService {
     });
 
     return createdLocation;
+  }
+
+  async getLocationById(id: string): Promise<Location | null> {
+    return await this.prisma.location.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async updateLocationyById(
+    id: string,
+    updateLocationDto: UpdateLocationDto,
+  ): Promise<Location | null> {
+    // Remove 'activities' field from updateLocationDto
+    const newUpdateLocationDto = JSON.parse(JSON.stringify(updateLocationDto));
+    if (Object.keys(newUpdateLocationDto).includes('activities')) {
+      delete newUpdateLocationDto.activities;
+    }
+
+    return await this.prisma.location.update({
+      where: {
+        id,
+      },
+      data: newUpdateLocationDto,
+    });
+  }
+
+  async deleteLocationById(id: string): Promise<Location | null> {
+    return await this.prisma.location.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
