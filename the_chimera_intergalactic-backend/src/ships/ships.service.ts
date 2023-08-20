@@ -12,8 +12,11 @@ export class ShipsService {
   async createShip(createShipDto: CreateShipDto) {
     const { name, model, speed, identifier, ship_picture, seats, start, end } =
       createShipDto;
+    let imageUrl;
+    if (ship_picture) {
+      imageUrl = await this.fileUploader.uploadImageBase64(ship_picture);
+    }
 
-    const imageUrl = await this.fileUploader.uploadImageBase64(ship_picture);
     const createdShip = await this.prisma.ship.create({
       data: {
         name,
@@ -28,7 +31,6 @@ export class ShipsService {
     seats.map(async (seat) => {
       for (let i = 0; i < seat.num_of_seats; i++) {
         const { seat_type, price } = seat;
-        const ship = createdShip;
         await this.prisma.seat.create({
           data: {
             type: seat_type,
