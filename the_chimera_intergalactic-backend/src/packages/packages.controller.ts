@@ -20,7 +20,7 @@ import {
   PackageGetSingleDto,
 } from './dto/packages.get.dto';
 
-@Controller('package')
+@Controller('packages')
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
   @Roles('ADMIN')
