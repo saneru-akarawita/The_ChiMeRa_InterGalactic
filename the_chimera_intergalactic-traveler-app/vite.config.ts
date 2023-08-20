@@ -22,6 +22,11 @@ export default defineConfig({
       plugins: {
         vue: Vue({
           include: [/\.vue$/, /\.md$/],
+          template: {
+            compilerOptions: {
+              isCustomElement: tag => ['swiper-container', 'swiper-slide'].includes(tag),
+            },
+          },
         }),
       },
     }),
@@ -61,7 +66,7 @@ export default defineConfig({
       },
     }),
 
-    WebfontDownload(),
+    WebfontDownload(['https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&display=swap']),
     VueDevTools(),
   ],
 

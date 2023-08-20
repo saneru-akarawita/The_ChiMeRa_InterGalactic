@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import AppButton from "../components/common/AppButton.vue";
-import AppInput from "~/components/common/AppInput.vue";
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import AppButton from '~/components/common/AppButton.vue'
+import shipImg from '~/assets/images/placeholders/ship.png'
+
 defineOptions({
-  name: "ShipSelectPage",
-});
+  name: 'ShipSelectPage',
+})
+
+const route = useRoute()
+const { id } = route.params
+const router = useRouter()
+
 const dummyData = {
-  destination: "Mars",
+  destination: 'Mars',
   ships: [
     {
-      name: "SpaceX",
-      economy_price: 1000,
+      shipId: 'ship_56725917-a52d-48c3-872a-095cdd955b970',
+      name: 'SpaceX',
+      economy_price: 500,
       business_price: 2000,
-      first_price: 3000,
+      first_price: 1000,
       economy_seat_total: 100,
       business_seat_total: 50,
       first_seat_total: 25,
@@ -21,73 +29,58 @@ const dummyData = {
       first_seat_occupied: 10,
     },
     {
-      name: "SpaceY",
-      economy_price: 1000,
+      shipId: 'ship_56725917-a52d-48c3-872a-095cdd955b97 ',
+      name: 'SpaceY',
+      economy_price: 500,
       business_price: 2000,
-      first_price: 3000,
+      first_price: 1000,
       economy_seat_total: 100,
       business_seat_total: 50,
-      first_seat_total: 25,
+      first_seat_total: 26,
       economy_seat_occupied: 50,
       business_seat_occupied: 25,
-      first_seat_occupied: 10,
-    },
-    {
-      name: "SpaceZ",
-      economy_price: 1000,
-      business_price: 2000,
-      first_price: 3000,
-      economy_seat_total: 100,
-      business_seat_total: 50,
-      first_seat_total: 25,
-      economy_seat_occupied: 50,
-      business_seat_occupied: 25,
-      first_seat_occupied: 10,
+      first_seat_occupied: 13,
     },
   ],
-};
+}
 
-let selectedSeatType = ref("");
+const selectedSeatType = ref('')
 
-const selectSeatType = (type: "FIRST" | "BUSINESS" | "ECONOMY") => {
-  selectedSeatType.value = type;
-};
+function selectSeatType(type: 'FIRST' | 'BUSINESS' | 'ECONOMY') {
+  selectedSeatType.value = type
+}
 
-let selectedShip = ref(dummyData.ships[0]);
-const selectShip = (index: number) => {
-  console.log(selectedShip);
-  selectedShip.value = dummyData.ships[index];
-  selectedSeatType.value = "";
-  console.log(selectedShip);
-};
+const selectedShip = ref(dummyData.ships[0])
+function selectShip(index: number) {
+  console.log(selectedShip)
+  selectedShip.value = dummyData.ships[index]
+  selectedSeatType.value = ''
+  console.log(selectedShip)
+}
 </script>
 
 <template>
   <main class="default-container">
-    <h1 class="heading-1">Select a ship</h1>
-    <h2>Destination: {{ dummyData.destination }}</h2>
-    <app-input
-      label="Select your starting location"
-      model-value=""
-      label-for="select"
-      type="text"
-      class="start-select"
-    />
+    <h1 class="heading-1 h-[80px] w-full flex items-center justify-center">
+      Select a ship
+    </h1>
     <div class="ships">
-      <div v-for="(ship, index) in dummyData.ships" class="ship" :key="index">
+      <div v-for="(ship, index) in dummyData.ships" :key="index" class="ship">
         <div class="image">
-          <img src="https://via.placeholder.com/150" alt="ship image" />
+          <img :src="shipImg" alt="ship image">
         </div>
         <h4>
           {{ ship.name }}
         </h4>
         <div class="select-button-container">
-          <app-button @click="selectShip(index)"> Select </app-button>
+          <AppButton @click="selectShip(index)">
+            Select
+          </AppButton>
         </div>
       </div>
     </div>
 
-    <hr />
+    <hr>
 
     <div v-if="selectedShip" class="seat-select">
       <h3>Selected Ship: {{ selectedShip.name }}</h3>
@@ -99,24 +92,24 @@ const selectShip = (index: number) => {
           "
           class="first-class"
         >
-          <app-button mode="outline" @click="selectSeatType('FIRST')">
+          <AppButton mode="outline" @click="selectSeatType('FIRST')">
             Select <b>First Class</b>:
             <b>{{ selectedShip.first_seat_occupied }}</b> seats out of
             <b>{{ selectedShip.first_seat_total }}</b> are available.
-          </app-button>
+          </AppButton>
         </div>
         <div
           v-if="
-            selectedShip.business_seat_occupied <
-            selectedShip.business_seat_total
+            selectedShip.business_seat_occupied
+              < selectedShip.business_seat_total
           "
           class="business"
         >
-          <app-button mode="outline" @click="selectSeatType('BUSINESS')">
+          <AppButton mode="outline" @click="selectSeatType('BUSINESS')">
             Select <b>Business Class</b>:
             <b>{{ selectedShip.business_seat_occupied }}</b> seats out of
             <b>{{ selectedShip.business_seat_total }}</b> are available.
-          </app-button>
+          </AppButton>
         </div>
         <div
           v-if="
@@ -124,11 +117,11 @@ const selectShip = (index: number) => {
           "
           class="economy"
         >
-          <app-button mode="outline" @click="selectSeatType('ECONOMY')">
+          <AppButton mode="outline" @click="selectSeatType('ECONOMY')">
             Select <b>Economy Class</b>:
             <b>{{ selectedShip.economy_seat_occupied }}</b> seats out of
             <b>{{ selectedShip.economy_seat_total }}</b> are available.
-          </app-button>
+          </AppButton>
         </div>
       </div>
     </div>
@@ -184,13 +177,15 @@ const selectShip = (index: number) => {
             selectedSeatType === "FIRST"
               ? selectedShip.first_price
               : selectedSeatType === "BUSINESS"
-              ? selectedShip.business_price
-              : selectedShip.economy_price
+                ? selectedShip.business_price
+                : selectedShip.economy_price
           }}
         </div>
       </div>
-      <div class="button-container">
-        <app-button> Proceed To Pay </app-button>
+      <div class="button-container my-6">
+        <AppButton @click="router.push(`/packages/${id}/payment-successful`)">
+          Proceed
+        </AppButton>
       </div>
     </div>
   </main>

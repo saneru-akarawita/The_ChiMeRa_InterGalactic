@@ -6,6 +6,8 @@ import {
   Req,
   Get,
   UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import type { JwtPayload, JwtRefreshPayload } from 'src/types';
@@ -41,6 +43,7 @@ export class AuthController {
     res.send({ accessToken });
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('signin')
   async signin(@Body() loginDto: TravelerLoginDto, @Res() res: Response) {
     const { accessToken, refreshToken } = await this.authService.signInTraveler(
