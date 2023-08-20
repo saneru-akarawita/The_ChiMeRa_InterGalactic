@@ -9,6 +9,7 @@ import { ActivitiesModule } from './activities/activities.module';
 import { AuthModule } from './auth/auth.module';
 import { PackagesModule } from './packages/packages.module';
 import { LocationsModule } from './locations/locations.module';
+import { BookingsModule } from './bookings/bookings.module';
 import { ShipsModule } from './ships/ships.module';
 import { SeatsModule } from './seats/seats.module';
 
@@ -23,6 +24,7 @@ import { SeatsModule } from './seats/seats.module';
     AuthModule,
     LocationsModule,
     PackagesModule,
+    BookingsModule,
     LocationsModule,
     SeatsModule,
   ],
