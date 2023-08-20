@@ -62,10 +62,15 @@ export class LocationsService {
     });
   }
 
-  async getAllLocations(withActivities = false) {
+
+  async getAllLocations() {
     return await this.prisma.location.findMany({
       include: {
-        activities: withActivities,
+        Package: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }
