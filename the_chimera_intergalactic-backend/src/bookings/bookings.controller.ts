@@ -20,8 +20,8 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 @Controller('bookings')
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
-  // @Roles('TRAVELER')
-  // @UseGuards(RolesGuard)
+  @Roles('TRAVELER')
+  @UseGuards(RolesGuard)
   @UseGuards(AccessTokenGuard)
   @Post('create')
   async createBooking(
@@ -84,6 +84,9 @@ export class BookingsController {
         });
       });
   }
+  @Roles('TRAVELER')
+  @UseGuards(RolesGuard)
+  @UseGuards(AccessTokenGuard)
   @Patch('cancel/:booking_id')
   async cancelBooking(
     @Param('booking_id') booking_id: string,
