@@ -38,7 +38,11 @@ async function onLoginFormSubmit() {
   const result = await api.auth.signin(loginFormData.value)
   if (result === true) {
     authStore.setIsLoggedIn(true)
-    await router.replace('/')
+    const result = await api.users.travelers.getProfile()
+    if (result) {
+      authStore.setProfile(result)
+      await router.replace('/')
+    }
   }
   else if (result) {
     const errors = result.errorMessages
