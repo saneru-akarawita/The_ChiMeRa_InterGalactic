@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import AppButton from "../components/common/AppButton.vue";
+import AppInput from "~/components/common/AppInput.vue";
 defineOptions({
   name: "ShipSelectPage",
 });
@@ -48,6 +49,12 @@ const selectShip = (index:number) => {
   <main class="default-container">
     <h1 class="heading-1">Select a ship</h1>
     <h2>Destination: {{ dummyData.destination }}</h2>
+    <app-input label="Select your starting location"
+      model-value=""
+      label-for="select"
+      type="text"
+      class="start-select"
+    />
     <div class="ships">
       <div v-for="(ship, index) in dummyData.ships" class="ship" :key="index">
         <div class="image">
@@ -119,6 +126,7 @@ h3 {
   margin-left: 2rem;
 }
 .ships {
+  margin-top: 2rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -142,5 +150,9 @@ p {
 }
 hr {
   margin: 2rem 0;
+}
+.start-select {
+  max-width: 20rem;
+  margin: 1rem;
 }
 </style>
