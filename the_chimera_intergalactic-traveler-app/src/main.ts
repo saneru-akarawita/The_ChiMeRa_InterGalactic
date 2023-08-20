@@ -1,32 +1,25 @@
-import { createApp } from 'vue'
+import { ViteSSG } from 'vite-ssg'
+import { setupLayouts } from 'virtual:generated-layouts'
+
+// import Previewer from 'virtual:vue-component-preview'
 import App from './App.vue'
-import router from './router';
+import type { UserModule } from './types'
+import generatedRoutes from '~pages'
 
-import { IonicVue } from '@ionic/vue';
+import '@unocss/reset/tailwind.css'
+import './styles/main.scss'
+import 'uno.css'
 
-/* Core CSS required for Ionic components to work properly */
-import '@ionic/vue/css/core.css';
+const routes = setupLayouts(generatedRoutes)
 
-/* Basic CSS for apps built with Ionic */
-import '@ionic/vue/css/normalize.css';
-import '@ionic/vue/css/structure.css';
-import '@ionic/vue/css/typography.css';
-
-/* Optional CSS utils that can be commented out */
-import '@ionic/vue/css/padding.css';
-import '@ionic/vue/css/float-elements.css';
-import '@ionic/vue/css/text-alignment.css';
-import '@ionic/vue/css/text-transformation.css';
-import '@ionic/vue/css/flex-utils.css';
-import '@ionic/vue/css/display.css';
-
-/* Theme variables */
-import './theme/variables.css';
-
-const app = createApp(App)
-  .use(IonicVue)
-  .use(router);
-  
-router.isReady().then(() => {
-  app.mount('#app');
-});
+// https://github.com/antfu/vite-ssg
+export const createApp = ViteSSG(
+  App,
+  { routes, base: import.meta.env.BASE_URL },
+  (ctx) => {
+    // install all modules under `modules/`
+    Object.values(import.meta.glob<{ install: UserModule }>('./modules/*.ts', { eager: true }))
+      .forEach(i => i.install?.(ctx))
+    // ctx.app.use(Previewer)
+  },
+)

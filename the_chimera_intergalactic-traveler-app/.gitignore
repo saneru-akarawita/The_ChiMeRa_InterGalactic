@@ -30,3 +30,6 @@ npm-debug.log*
 /platforms
 /plugins
 /www
+./src/auto-import.d.ts
+./src/components.d.ts
+
