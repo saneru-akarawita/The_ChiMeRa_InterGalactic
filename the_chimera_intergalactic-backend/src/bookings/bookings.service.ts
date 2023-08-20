@@ -6,48 +6,60 @@ import { CreateBookingDto } from './dto/bookings.create.dto';
 export class BookingsService {
   constructor(private readonly prisma: PrismaService) {}
   async createBooking(bookingDto: CreateBookingDto, user_id: string) {
-    const { package_id, starting_date, seat_id } = bookingDto;
+    const { package_id, ship_id, seat_type } = bookingDto;
     // get the package from database to calculate the price and finish date
     const selectedPackage = await this.prisma.package.findUnique({
       where: {
         id: package_id,
       },
     });
-    const selectedSeat = await this.prisma.seat.findUnique({
+    const selectedShip = await this.prisma.ship.findUnique({
       where: {
-        id: seat_id,
+        id: ship_id,
       },
     });
 
-    if (!selectedPackage || !selectedSeat) {
-      console.log(selectedPackage, selectedSeat, 'Not found');
+    if (!selectedPackage || !selectedShip) {
+      console.log(selectedPackage, selectedShip, 'Not found');
       throw new Error('Package or Seat not found');
     }
 
-    if (selectedSeat.booking_status) {
-      console.log(selectedSeat, 'Already booked');
-      throw new Error('Selecte seat is already booked');
+    switch (seat_type) {
+      case 'FIRST':
+        if (
+          selectedShip.first_seat_total === selectedShip.first_seat_occupied
+        ) {
+          throw new Error('No more first class seats available');
+        }
+        break;
+      case 'BUSINESS':
+        if (
+          selectedShip.business_seat_total ===
+          selectedShip.business_seat_occupied
+        ) {
+          throw new Error('No more business class seats available');
+        }
+        break;
+      case 'ECONOMY':
+        if (
+          selectedShip.economy_seat_total === selectedShip.economy_seat_occupied
+        ) {
+          throw new Error('No more economy class seats available');
+        }
+        break;
+      default:
+        throw new Error('Invalid seat type');
     }
 
     const booking_date = new Date();
-    const start = new Date(starting_date);
-    const finish = new Date(starting_date);
-    finish.setMonth(finish.getMonth() + selectedPackage.duration);
 
-    const packagePrice = selectedPackage.price + selectedSeat.price;
+    const packagePrice = selectedPackage.price;
 
     try {
       const booking = await this.prisma.booking.create({
         data: {
           booking_date,
-          starting_date: start,
-          finishing_date: finish,
           payment_amount: packagePrice,
-          seat: {
-            connect: {
-              id: seat_id,
-            },
-          },
           package: {
             connect: {
               id: package_id,
@@ -58,18 +70,45 @@ export class BookingsService {
               id: user_id,
             },
           },
+          ship: {
+            connect: {
+              id: ship_id,
+            },
+          },
+          seat_type: seat_type,
         },
       });
 
-      const seat = await this.prisma.seat.update({
+      // change the seat occupied count accordingly
+      let data = {};
+      switch (seat_type) {
+        case 'FIRST':
+          data = {
+            first_seat_occupied: selectedShip.first_seat_occupied + 1,
+          };
+          break;
+        case 'BUSINESS':
+          data = {
+            business_seat_occupied: selectedShip.business_seat_occupied + 1,
+          };
+          break;
+        case 'ECONOMY':
+          data = {
+            economy_seat_occupied: selectedShip.economy_seat_occupied + 1,
+          };
+          break;
+        default:
+          throw new Error('Invalid seat type');
+      }
+
+      const updatedShip = await this.prisma.ship.update({
         where: {
-          id: seat_id,
+          id: ship_id,
         },
-        data: {
-          booking_status: true,
-        },
+        data,
       });
-      return { booking, seat };
+
+      return { booking, updatedShip };
     } catch (error) {
       console.log(error);
       throw new Error('Error while creating booking');
@@ -83,7 +122,6 @@ export class BookingsService {
         },
         include: {
           package: true,
-          seat: true,
         },
       });
       return bookings;
@@ -100,7 +138,6 @@ export class BookingsService {
         },
         include: {
           package: true,
-          seat: true,
         },
       });
       return booking;
@@ -117,20 +154,41 @@ export class BookingsService {
         },
         include: {
           package: true,
-          seat: true,
+          ship: true,
         },
       });
       if (!booking) {
         throw new Error('Booking not found');
       }
-      const seat = await this.prisma.seat.update({
+
+      // change the seat occupied count accordingly
+      let data = {};
+      switch (booking.seat_type) {
+        case 'FIRST':
+          data = {
+            first_seat_occupied: booking.ship.first_seat_occupied - 1,
+          };
+          break;
+        case 'BUSINESS':
+          data = {
+            business_seat_occupied: booking.ship.business_seat_occupied - 1,
+          };
+          break;
+        case 'ECONOMY':
+          data = {
+            economy_seat_occupied: booking.ship.economy_seat_occupied - 1,
+          };
+          break;
+        default:
+          throw new Error('Invalid seat type');
+      }
+      const ship = await this.prisma.ship.update({
         where: {
-          id: booking.seat_id,
+          id: booking.ship_id,
         },
-        data: {
-          booking_status: false,
-        },
+        data,
       });
+
       const deletedBooking = await this.prisma.booking.update({
         where: {
           id: booking_id,
@@ -139,7 +197,7 @@ export class BookingsService {
           status: 'CANCELLED',
         },
       });
-      return { deletedBooking, seat };
+      // return { deletedBooking, seat };
     } catch (error) {
       console.log(error);
       throw new Error('Error while fetching booking');

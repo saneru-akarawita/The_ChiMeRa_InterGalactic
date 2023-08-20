@@ -28,8 +28,19 @@ export class ShipsController {
   @UseGuards(AccessTokenGuard)
   @Post('add')
   async createShip(@Body() createShipDto: CreateShipDto, @Res() res: Response) {
-    const result = await this.shipService.createShip(createShipDto);
-    res.send({ result });
+    this.shipService
+      .createShip(createShipDto)
+      .then((result) => {
+        res.status(201).json({
+          message: 'Ship created successfully',
+          data: result,
+        });
+      })
+      .catch((e) => {
+        res.status(400).json({
+          message: e.message,
+        });
+      });
   }
 
   @Roles('TRAVELER', 'ADMIN')

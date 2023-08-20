@@ -63,17 +63,19 @@ model Traveler {
 }
 
 model Location {
-  id           String       @id @default(dbgenerated("(concat('location_', gen_random_uuid()))::TEXT"))
-  name         String
-  description  String
-  x            Float
-  y            Float
-  z            Float
-  image        String
-  destinations String[]
-  type         LocationType @default(PLANET)
-  activities   Activity[]
-  Package      Package[]
+  id             String       @id @default(dbgenerated("(concat('location_', gen_random_uuid()))::TEXT"))
+  name           String
+  description    String
+  x              Float
+  y              Float
+  z              Float
+  image          String
+  destinations   String[]
+  type           LocationType @default(PLANET)
+  activities     Activity[]
+  Package        Package[]
+  incoming_ships Ship[]       @relation("incoming_ships")
+  outgoing_ships Ship[]       @relation("outgoing_ships")
 }
 
 model Activity {
@@ -110,38 +112,38 @@ model PackageActivity {
 }
 
 model Ship {
-  id         String @id @default(dbgenerated("(concat('ship_', gen_random_uuid()))::TEXT"))
-  name       String
-  speed      Int
-  model      String
-  start      String
-  end        String
-  identifier String @unique
-  ship_pic   String @default("ship.png")
-  seat       Seat[]
-}
-
-model Seat {
-  id             String    @id @default(dbgenerated("(concat('seat_', gen_random_uuid()))::TEXT"))
-  type           SeatType  @default(ECONOMY)
-  booking_status Boolean   @default(false)
-  ship           Ship      @relation(fields: [ship_id], references: [id])
-  ship_id        String
-  price          Float     @default(0.00)
-  Booking        Booking[]
+  id                     String    @id @default(dbgenerated("(concat('ship_', gen_random_uuid()))::TEXT"))
+  name                   String
+  speed                  Int
+  model                  String
+  start                  String
+  end                    String
+  start_location         Location  @relation("outgoing_ships", fields: [start], references: [id])
+  end_location           Location  @relation("incoming_ships", fields: [end], references: [id])
+  identifier             String    @unique
+  ship_pic               String    @default("ship.png")
+  first_seat_total       Int
+  economy_seat_total     Int
+  business_seat_total    Int
+  first_seat_price       Float
+  economy_seat_price     Float
+  business_seat_price    Float
+  first_seat_occupied    Int    @default(0)
+  economy_seat_occupied  Int    @default(0)
+  business_seat_occupied Int    @default(0)
+  Booking                Booking[]
 }
 
 model Booking {
-  id             String   @id @default(dbgenerated("(concat('booking_', gen_random_uuid()))::TEXT"))
+  id             String        @id @default(dbgenerated("(concat('booking_', gen_random_uuid()))::TEXT"))
   booking_date   DateTime
-  starting_date  DateTime
-  finishing_date DateTime
   payment_amount Float
   user_id        String
   package_id     String
-  seat_id        String
+  ship_id        String
+  seat_type      SeatType
   status         BookingStatus @default(ACTIVE)
-  user           User     @relation(fields: [user_id], references: [id])
-  package        Package  @relation(fields: [package_id], references: [id])
-  seat           Seat     @relation(fields: [seat_id], references: [id])
+  user           User          @relation(fields: [user_id], references: [id])
+  package        Package       @relation(fields: [package_id], references: [id])
+  ship           Ship          @relation(fields: [ship_id], references: [id])
 }
