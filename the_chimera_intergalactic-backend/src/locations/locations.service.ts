@@ -62,6 +62,7 @@ export class LocationsService {
     });
   }
 
+
   async getAllLocations() {
     return await this.prisma.location.findMany({
       include: {
@@ -125,7 +126,7 @@ export class LocationsService {
       return false;
     }
 
-    const locations: Array<any> = await this.getAllLocations();
+    const locations: Array<any> = await this.getAllLocations(true);
 
     const checkPoints: Array<any> = locations
       .filter((location: Location) => {
@@ -142,13 +143,15 @@ export class LocationsService {
       })
       .map((location: Location) => {
         currentLocationCoods = [location.x, location.y, location.z];
+        const distance = this.getPointDistance(
+          startLocationCoods,
+          currentLocationCoods,
+        );
         return {
           ...location,
           ...{
-            distance: this.getPointDistance(
-              startLocationCoods,
-              currentLocationCoods,
-            ),
+            distance,
+            time: Math.ceil(distance) * 655200000,
           },
         };
       });
