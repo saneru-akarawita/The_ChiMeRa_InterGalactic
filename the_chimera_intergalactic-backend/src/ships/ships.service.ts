@@ -27,13 +27,14 @@ export class ShipsService {
     });
     seats.map(async (seat) => {
       for (let i = 0; i < seat.num_of_seats; i++) {
-        const { seat_type } = seat;
+        const { seat_type, price } = seat;
         const ship = createdShip;
         await this.prisma.seat.create({
           data: {
             type: seat_type,
             ship_id: createdShip.id,
             booking_status: false,
+            price: price,
           },
         });
       }

@@ -7,7 +7,7 @@ export class SeatsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createSeat(createSeatDto: CreateSeatDto) {
-    const { seat_type, ship_id, num_of_seats } = createSeatDto;
+    const { seat_type, ship_id, num_of_seats, price } = createSeatDto;
 
     let count = 0;
     for (let i = 0; i < num_of_seats; i++) {
@@ -16,6 +16,7 @@ export class SeatsService {
           type: seat_type,
           ship_id,
           booking_status: false,
+          price: price,
         },
       });
       count++;

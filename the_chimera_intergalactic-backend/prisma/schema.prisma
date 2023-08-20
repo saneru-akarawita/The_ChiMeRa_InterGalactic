@@ -115,4 +115,5 @@ model Seat {
   booking_status Boolean  @default(false)
   ship           Ship     @relation(fields: [ship_id], references: [id])
   ship_id        String
+  price          Float    @default(0.00)
 }
