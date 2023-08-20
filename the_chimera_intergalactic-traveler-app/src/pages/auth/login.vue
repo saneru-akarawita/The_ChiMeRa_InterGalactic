@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { api } from '~/api'
-import { useAuthStore } from '~/stores'
+import { useAuthStore, useLocationsStore, usePackagesStore } from '~/stores'
 import AppButton from '~/components/common/AppButton.vue'
 import AppInput from '~/components/common/AppInput.vue'
 
@@ -26,6 +26,8 @@ const systemError = ref('')
 
 const router = useRouter()
 const authStore = useAuthStore()
+const locationsStore = useLocationsStore()
+const packagesStore = usePackagesStore()
 
 async function onLoginFormSubmit() {
   for (const key in loginFormData.value) {
@@ -38,7 +40,18 @@ async function onLoginFormSubmit() {
   const result = await api.auth.signin(loginFormData.value)
   if (result === true) {
     authStore.setIsLoggedIn(true)
-    await router.replace('/')
+    const result = await api.users.travelers.getProfile()
+    if (result) {
+      authStore.setProfile(result)
+      const locations = await api.locations.get()
+      if (locations)
+        locationsStore.setIsLocations(locations)
+      const packages = await api.packages.get()
+      if (packages)
+        packagesStore.setIsPackages(packages)
+
+      await router.replace('/')
+    }
   }
   else if (result) {
     const errors = result.errorMessages
