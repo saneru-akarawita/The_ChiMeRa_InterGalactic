@@ -1,19 +1,26 @@
 <script setup lang="ts">
+import { ref, toRefs } from 'vue'
+
 // Props
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: string | number | undefined
   label: string
   labelFor: string
   fixedLabel?: boolean
   type: 'text' | 'password' | 'email' | 'number' | 'date'
-}>()
+  errors?: string[]
+  required?: boolean
+}>(), {
+  errors: () => [] as string[],
+  required: false,
+})
 
 //  Emits
 const emit = defineEmits<{
   (event: 'update:modelValue', payload: string | number): void
 }>()
 
-const { label, labelFor, modelValue } = toRefs(props)
+const { label, labelFor, modelValue, fixedLabel, errors, type } = toRefs(props)
 const input = ref<HTMLInputElement>()
 
 function onClickLabel() {
@@ -24,26 +31,22 @@ function onClickLabel() {
 <template>
   <div class="app-input">
     <input
-      v-bind="$attrs"
-      ref="input"
-      :type="type"
-      :value="modelValue"
-      autocomplete="off"
-      @change="
+      v-bind="$attrs" ref="input" :type="type" :value="modelValue" autocomplete="off" @change="
         emit('update:modelValue', ($event.target as HTMLInputElement).value)
       "
     >
-    <label
-      :for="labelFor"
-      :class="modelValue !== '' || fixedLabel ? 'focused' : ''"
-      @click="onClickLabel"
-    >
-      {{ label }}
+    <label :for="labelFor" :class="modelValue !== '' || fixedLabel ? 'focused' : ''" @click="onClickLabel">
+      {{ label }}  <span v-if="required" class="text-red">*</span>
     </label>
     <div class="icon">
       <slot name="icon" />
     </div>
   </div>
+  <ul v-if="errors.length > 0" class="ml-4 self-start text-[0.8rem] text-red">
+    <li v-for="e in errors" :key="e">
+      {{ e }}
+    </li>
+  </ul>
 </template>
 
 <style lang="scss" scoped>
@@ -98,7 +101,7 @@ function onClickLabel() {
       outline: 2px solid #7059FF;
       border: 1px solid transparent;
 
-      & + label {
+      &+label {
         top: 0;
         left: 1rem;
         padding-inline: 0.2rem;
@@ -119,7 +122,7 @@ function onClickLabel() {
       font-size: 1.2rem;
       -webkit-text-fill-color: var(--color-white) !important;
 
-      & + label {
+      &+label {
         top: 0;
         left: 1rem;
         padding-inline: 0.2rem;

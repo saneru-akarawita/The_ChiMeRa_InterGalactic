@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { RouterLink, useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { api } from '../../api'
+import { api } from '~/api'
+import AppInput from '~/components/common/AppInput.vue'
+import AppButton from '~/components/common/AppButton.vue'
 
 defineOptions({
   name: 'AuthSignupPage',
@@ -21,7 +23,7 @@ const signupFormData = ref({
   terms: false,
 })
 
-const _singupFormValidationErrors = ref({
+const singupFormValidationErrors = ref({
   name: [] as string[],
   email: [] as string[],
   password: [] as string[],
@@ -32,6 +34,8 @@ const _singupFormValidationErrors = ref({
   profile_picture: [] as string[],
   terms: [] as string[],
 })
+
+const systemError = ref('')
 
 const imageUrl = ref('')
 
@@ -67,10 +71,18 @@ async function onSignupFormSubmit() {
     }
   }
   const result = await api.auth.signup(signupFormData.value)
-  if (result === true)
+  if (result === true) {
     await router.replace('/auth/login')
-  else
-    console.log(result)
+  }
+  else if (result) {
+    const errors = result.errorMessages
+    errors.forEach((e) => {
+      singupFormValidationErrors.value[e.property] = e.messages
+    })
+  }
+  else {
+    systemError.value = 'Something went wrong'
+  }
 }
 </script>
 
@@ -105,7 +117,7 @@ async function onSignupFormSubmit() {
           accept=".png, .jpg" @change="loadProfilePicture"
         >
       </div>
-      <AppInput id="name" v-model="signupFormData.name" required label="Name" name="name" label-for="name" type="text">
+      <AppInput id="name" v-model="signupFormData.name" required label="Name" name="name" label-for="name" type="text" :errors="singupFormValidationErrors.name">
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 21 20" fill="none">
             <path
@@ -122,6 +134,7 @@ async function onSignupFormSubmit() {
       <AppInput
         id="email" v-model="signupFormData.email" required label="Email" name="email" label-for="email"
         type="email"
+        :errors="singupFormValidationErrors.email"
       >
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
@@ -135,6 +148,7 @@ async function onSignupFormSubmit() {
       <AppInput
         id="dob" v-model="signupFormData.dob" required label="Date Of Birth" name="dob" label-for="dob"
         type="date" :fixed-label="true"
+        :errors="singupFormValidationErrors.dob"
       >
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 21 20" fill="none">
@@ -153,6 +167,7 @@ async function onSignupFormSubmit() {
       <AppInput
         id="galaxy" v-model="signupFormData.galaxy" required label="Galaxy" name="galaxy" label-for="galaxy"
         type="text"
+        :errors="singupFormValidationErrors.galaxy"
       >
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512">
@@ -166,6 +181,7 @@ async function onSignupFormSubmit() {
       <AppInput
         id="planet" v-model="signupFormData.planet" required label="Planet" name="planet" label-for="planet"
         type="text"
+        :errors="singupFormValidationErrors.planet"
       >
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 21 20" fill="none">
@@ -183,6 +199,7 @@ async function onSignupFormSubmit() {
       <AppInput
         id="password" v-model="signupFormData.password" required label="Password" name="password"
         label-for="password" type="password"
+        :errors="singupFormValidationErrors.password"
       >
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
@@ -196,6 +213,7 @@ async function onSignupFormSubmit() {
       <AppInput
         id="confirm_password" v-model="signupFormData.confirm_password" required label="Confirm password"
         type="password" name="confirm_password" label-for="confirm_password"
+        :errors="singupFormValidationErrors.confirm_password"
       >
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
@@ -212,7 +230,9 @@ async function onSignupFormSubmit() {
         <label for="terms">I agree to the <RouterLink to="/terms" class="text-[var(--color-blue-purple)]">terms and
           conditions</RouterLink></label>
       </div>
-
+      <p v-if="systemError !== ''">
+        Something went wrong
+      </p>
       <AppButton class="mt-6 w-full" type="submit">
         Let's begin the journey !
       </AppButton>

@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { api } from '~/api'
+import { useAuthStore } from '~/stores'
+import AppButton from '~/components/common/AppButton.vue'
+import AppInput from '~/components/common/AppInput.vue'
 
 defineOptions({
   name: 'AuthLoginPage',
@@ -7,18 +13,59 @@ defineOptions({
 const loginFormData = ref({
   email: '',
   password: '',
-  rememberMe: false,
+  remember_me: false,
 })
+
+const loginFormValidationErrors = ref({
+  email: [] as string[],
+  password: [] as string[],
+  remember_me: [] as string[],
+})
+
+const systemError = ref('')
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+async function onLoginFormSubmit() {
+  for (const key in loginFormData.value) {
+    const typedValue = loginFormData.value[key as keyof typeof loginFormData.value]
+    if (typedValue === null || typedValue === '') {
+      console.log(key)
+      return
+    }
+  }
+  const result = await api.auth.signin(loginFormData.value)
+  if (result === true) {
+    authStore.setIsLoggedIn(true)
+    await router.replace('/')
+  }
+  else if (result) {
+    const errors = result.errorMessages
+    errors.forEach((e) => {
+      loginFormValidationErrors.value[e.property] = e.messages
+    })
+  }
+  else {
+    systemError.value = 'Something went wrong'
+  }
+}
 </script>
 
 <template>
   <main class="auth-login-page default-container">
-    <form autocomplete="off" class="flex flex-col items-center justify-center gap-4">
-      <img src="../../assets/images/logos/logo.svg" alt="Intergalactic Logo" width="38px" height="38px" class="h-[60px] w-[60px]">
+    <form autocomplete="off" class="flex flex-col items-center justify-center gap-4" @submit.prevent="onLoginFormSubmit">
+      <img
+        src="../../assets/images/logos/logo.svg" alt="Intergalactic Logo" width="38px" height="38px"
+        class="h-[60px] w-[60px]"
+      >
       <h1 class="heading-1 mb-4">
         Welcome Back !
       </h1>
-      <AppInput id="email" v-model="loginFormData.email" label="Email" name="email" label-for="email" type="email">
+      <AppInput
+        id="email" v-model="loginFormData.email" label="Email" name="email" label-for="email" type="email"
+        :errors="loginFormValidationErrors.email" required
+      >
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
             <path
@@ -30,7 +77,7 @@ const loginFormData = ref({
       </AppInput>
       <AppInput
         id="password" v-model="loginFormData.password" label="Password" name="password" label-for="password"
-        type="email"
+        :errors="loginFormValidationErrors.email" type="password" required
       >
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
@@ -41,7 +88,11 @@ const loginFormData = ref({
           </svg>
         </template>
       </AppInput>
-      <AppButton class="mt-6 w-full">
+      <div class="flex items-center self-start gap-4">
+        <input id="remember_me" v-model="loginFormData.remember_me" type="checkbox" name="remember_me" class="h-4 w-4">
+        <label for="remember_me">Remember me</label>
+      </div>
+      <AppButton class="w-full">
         Continue to Login
       </AppButton>
       <RouterLink to="/auth/signup">

@@ -1,5 +1,9 @@
 {
-    "recommendations": [
-        "ionic.ionic"
-    ]
+  "recommendations": [
+    "yoavbls.pretty-ts-errors",
+    "vue.volar",
+    "wix.vscode-import-cost",
+    "steoates.autoimport",
+    "dbaeumer.vscode-eslint"
+  ]
 }
