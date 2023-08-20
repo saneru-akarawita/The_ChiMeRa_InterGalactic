@@ -36,6 +36,7 @@ model User {
   user_type     UserType  @default(TRAVELER)
   traveler      Traveler?
   admin         Admin?
+  Booking       Booking[]
 }
 
 model Admin {
@@ -91,6 +92,7 @@ model Package {
   PackageActivity PackageActivity[]
   location_id     String
   location        Location          @relation(fields: [location_id], references: [id])
+  Booking         Booking[]
 }
 
 model PackageActivity {
@@ -114,10 +116,26 @@ model Ship {
 }
 
 model Seat {
-  id             String   @id @default(dbgenerated("(concat('seat_', gen_random_uuid()))::TEXT"))
-  type           SeatType @default(ECONOMY)
-  booking_status Boolean  @default(false)
-  ship           Ship     @relation(fields: [ship_id], references: [id])
+  id             String    @id @default(dbgenerated("(concat('seat_', gen_random_uuid()))::TEXT"))
+  type           SeatType  @default(ECONOMY)
+  booking_status Boolean   @default(false)
+  ship           Ship      @relation(fields: [ship_id], references: [id])
   ship_id        String
-  price          Float    @default(0.00)
+  price          Float     @default(0.00)
+  Booking        Booking[]
+}
+
+model Booking {
+  id             String   @id @default(dbgenerated("(concat('booking_', gen_random_uuid()))::TEXT"))
+  booking_date   DateTime
+  starting_date  DateTime
+  finishing_date DateTime
+  payment_amount Float
+  user_id        String
+  package_id     String
+  seat_id        String
+  status         Boolean  @default(false)
+  user           User     @relation(fields: [user_id], references: [id])
+  package        Package  @relation(fields: [package_id], references: [id])
+  seat           Seat     @relation(fields: [seat_id], references: [id])
 }

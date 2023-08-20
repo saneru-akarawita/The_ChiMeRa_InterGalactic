@@ -12,4 +12,10 @@ export class CreateBookingDto {
     message: 'Starting date is required',
   })
   readonly starting_date: Date;
+
+  @IsString()
+  @IsNotEmpty({
+    message: 'Seat id is required',
+  })
+  readonly seat_id: string;
 }
