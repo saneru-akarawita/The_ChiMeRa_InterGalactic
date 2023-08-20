@@ -62,7 +62,9 @@ export class ShipsService {
   }
 
   async getAllShips() {
-    return await this.prisma.ship.findMany();
+    const allShips = await this.prisma.ship.findMany();
+    console.log(allShips);
+    return allShips;
   }
 
   async filterShips(start: string, end: string) {
