@@ -30,10 +30,9 @@ export class ActivitiesController {
   }
 
   @Get(':id')
-  async getActivityById(@Param('id') id: string): Promise<object> {
-    const activity: Activity | null = await this.activitiesService.getActivity(
-      id,
-    );
+  async getActivity(@Param('id') id: string): Promise<object> {
+    const activity: Activity | null =
+      await this.activitiesService.getActivityById(id);
 
     return { activity };
   }
@@ -47,7 +46,7 @@ export class ActivitiesController {
     let updatedActivity;
 
     try {
-      updatedActivity = await this.activitiesService.updateActivity(
+      updatedActivity = await this.activitiesService.updateActivityById(
         id,
         updateActivityDto,
       );
@@ -64,7 +63,7 @@ export class ActivitiesController {
     let deletedActivity;
 
     try {
-      deletedActivity = await this.activitiesService.deleteActivity(id);
+      deletedActivity = await this.activitiesService.deleteActivityById(id);
     } catch (error) {
       deletedActivity = null;
       response.statusCode = HttpStatus.NOT_FOUND;

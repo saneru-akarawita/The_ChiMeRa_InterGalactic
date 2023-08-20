@@ -22,7 +22,7 @@ export class ActivitiesService {
     });
   }
 
-  async getActivity(id: string): Promise<Activity | null> {
+  async getActivityById(id: string): Promise<Activity | null> {
     return await this.prisma.activity.findUnique({
       where: {
         id,
@@ -30,7 +30,7 @@ export class ActivitiesService {
     });
   }
 
-  async updateActivity(
+  async updateActivityById(
     id: string,
     updateActivityDto: UpdateActivityDto,
   ): Promise<Activity | null> {
@@ -47,7 +47,7 @@ export class ActivitiesService {
     });
   }
 
-  async deleteActivity(id: string): Promise<Activity | null> {
+  async deleteActivityById(id: string): Promise<Activity | null> {
     return await this.prisma.activity.delete({
       where: {
         id,
