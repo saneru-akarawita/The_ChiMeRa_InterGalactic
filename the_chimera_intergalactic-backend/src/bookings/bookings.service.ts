@@ -131,9 +131,12 @@ export class BookingsService {
           booking_status: false,
         },
       });
-      const deletedBooking = await this.prisma.booking.delete({
+      const deletedBooking = await this.prisma.booking.update({
         where: {
           id: booking_id,
+        },
+        data: {
+          status: 'CANCELLED',
         },
       });
       return { deletedBooking, seat };
