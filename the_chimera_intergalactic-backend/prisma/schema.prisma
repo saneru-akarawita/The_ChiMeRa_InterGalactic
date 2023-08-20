@@ -22,6 +22,12 @@ enum PackageCategory {
   SUMMIT
 }
 
+enum SeatType {
+  FIRST
+  ECONOMY
+  BUSINESS
+}
+
 model User {
   id            String    @id @default(dbgenerated("(concat('user_', gen_random_uuid()))::TEXT"))
   email         String    @unique
@@ -89,4 +95,24 @@ model PackageActivity {
   activity_id String
   package     Package  @relation(fields: [package_id], references: [id])
   activity    Activity @relation(fields: [activity_id], references: [id])
+}
+
+model Ship {
+  id         String @id @default(dbgenerated("(concat('ship_', gen_random_uuid()))::TEXT"))
+  name       String
+  speed      Int
+  model      String
+  start      String
+  end        String
+  identifier String @unique
+  ship_pic   String @default("ship.png")
+  seat       Seat[]
+}
+
+model Seat {
+  id             String   @id @default(dbgenerated("(concat('seat_', gen_random_uuid()))::TEXT"))
+  type           SeatType @default(ECONOMY)
+  booking_status Boolean  @default(false)
+  ship           Ship     @relation(fields: [ship_id], references: [id])
+  ship_id        String
 }
