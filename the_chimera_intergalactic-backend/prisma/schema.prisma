@@ -91,6 +91,6 @@ model PackageActivity {
   id          String   @id @default(dbgenerated("(concat('package_activity_', gen_random_uuid()))::TEXT"))
   package_id  String
   activity_id String
-  package     Package  @relation(fields: [package_id], references: [id])
+  package     Package  @relation(fields: [package_id], references: [id], onDelete: Cascade)
   activity    Activity @relation(fields: [activity_id], references: [id])
 }
