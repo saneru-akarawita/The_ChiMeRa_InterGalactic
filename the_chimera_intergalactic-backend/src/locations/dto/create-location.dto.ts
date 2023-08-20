@@ -7,7 +7,6 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { MemoryStoredFile } from 'nestjs-form-data';
 import { CreateActivityDto } from 'src/activities/dto/create-activity.dto';
 import { IsValidType } from 'src/validators';
 import { LocationType } from '@prisma/client';
