@@ -60,6 +60,7 @@ model Location {
   destinations String[]
   type         LocationType @default(PLANET)
   activities   Activity[]
+  Package      Package[]
 }
 
 model Activity {
@@ -75,12 +76,15 @@ model Package {
   id              String            @id @default(dbgenerated("(concat('package_', gen_random_uuid()))::TEXT"))
   name            String
   price           Float
+  warp_drive      Boolean
   duration        Float
-  accomadation    String?
+  accomodation    String?
   category        PackageCategory
   destinations    String[]
   additional      String[]
   PackageActivity PackageActivity[]
+  location_id     String
+  location        Location          @relation(fields: [location_id], references: [id])
 }
 
 model PackageActivity {
