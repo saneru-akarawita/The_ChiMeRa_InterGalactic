@@ -31,4 +31,19 @@ export interface Package {
   additional: any[]
   location_id: string
   location: Location
+  PackageActivity: PackageActivity[]
+}
+
+export interface PackageActivity {
+  id: string
+  package_id: string
+  activity_id: string
+  activity: Activity
+}
+
+export interface Activity {
+  id: string
+  name: string
+  description: string
+  location_id: string
 }

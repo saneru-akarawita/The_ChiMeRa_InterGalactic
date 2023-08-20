@@ -1,19 +1,26 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import AppButton from '../components/common/AppButton.vue'
-import AppInput from '~/components/common/AppInput.vue'
+import { useRoute, useRouter } from 'vue-router'
+import AppButton from '~/components/common/AppButton.vue'
+import shipImg from '~/assets/images/placeholders/ship.png'
 
 defineOptions({
   name: 'ShipSelectPage',
 })
+
+const route = useRoute()
+const { id } = route.params
+const router = useRouter()
+
 const dummyData = {
   destination: 'Mars',
   ships: [
     {
+      shipId: 'ship_56725917-a52d-48c3-872a-095cdd955b970',
       name: 'SpaceX',
-      economy_price: 1000,
+      economy_price: 500,
       business_price: 2000,
-      first_price: 3000,
+      first_price: 1000,
       economy_seat_total: 100,
       business_seat_total: 50,
       first_seat_total: 25,
@@ -22,28 +29,17 @@ const dummyData = {
       first_seat_occupied: 10,
     },
     {
+      shipId: 'ship_56725917-a52d-48c3-872a-095cdd955b97 ',
       name: 'SpaceY',
-      economy_price: 1000,
+      economy_price: 500,
       business_price: 2000,
-      first_price: 3000,
+      first_price: 1000,
       economy_seat_total: 100,
       business_seat_total: 50,
-      first_seat_total: 25,
+      first_seat_total: 26,
       economy_seat_occupied: 50,
       business_seat_occupied: 25,
-      first_seat_occupied: 10,
-    },
-    {
-      name: 'SpaceZ',
-      economy_price: 1000,
-      business_price: 2000,
-      first_price: 3000,
-      economy_seat_total: 100,
-      business_seat_total: 50,
-      first_seat_total: 25,
-      economy_seat_occupied: 50,
-      business_seat_occupied: 25,
-      first_seat_occupied: 10,
+      first_seat_occupied: 13,
     },
   ],
 }
@@ -65,21 +61,13 @@ function selectShip(index: number) {
 
 <template>
   <main class="default-container">
-    <h1 class="heading-1">
+    <h1 class="heading-1 h-[80px] w-full flex items-center justify-center">
       Select a ship
     </h1>
-    <h2>Destination: {{ dummyData.destination }}</h2>
-    <AppInput
-      label="Select your starting location"
-      model-value=""
-      label-for="select"
-      type="text"
-      class="start-select"
-    />
     <div class="ships">
       <div v-for="(ship, index) in dummyData.ships" :key="index" class="ship">
         <div class="image">
-          <img src="https://via.placeholder.com/150" alt="ship image">
+          <img :src="shipImg" alt="ship image">
         </div>
         <h4>
           {{ ship.name }}
@@ -194,8 +182,10 @@ function selectShip(index: number) {
           }}
         </div>
       </div>
-      <div class="button-container">
-        <AppButton> Proceed To Pay </AppButton>
+      <div class="button-container my-6">
+        <AppButton @click="router.push(`/packages/${id}/payment-successful`)">
+          Proceed
+        </AppButton>
       </div>
     </div>
   </main>

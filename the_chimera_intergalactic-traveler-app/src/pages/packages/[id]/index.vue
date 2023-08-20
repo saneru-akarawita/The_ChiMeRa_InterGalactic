@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePackagesStore } from '~/stores'
+import AppButton from '~/components/common/AppButton.vue'
 
 const route = useRoute()
 const { id } = route.params
@@ -41,7 +42,7 @@ const selectedPackage = computed(() => {
         </p>
       </h1>
     </header>
-    <div class="h-[calc(100vh-300px)] flex flex-col gap-6 bg-[var(--color-black)] p-8" style="border-radius: 2rem 2rem 0 0">
+    <div class="h-[calc(100vh-300px)] flex flex-col gap-6 bg-[var(--color-black)] p-8" style="border-radius: 4rem 4rem 0 0">
       <div class="flex items-center justify-between">
         <div>
           <p class="text-[14px] font-[500]">
@@ -72,14 +73,19 @@ const selectedPackage = computed(() => {
         <p class="text-[14px] font-[700]">
           Includes
         </p>
-        <div class="mt-4">
+        <div v-for="a in selectedPackage.PackageActivity" :key="a.id" class="mt-4">
           <p class="font-[700] text-[var(--color-purple)]">
-            {{ selectedPackage }}
+            {{ a.activity.name }}
           </p>
           <p class="text-[12px] font-[600]">
-            Accomdation
+            {{ a.activity.description }}
           </p>
         </div>
+      </div>
+      <div class="mt-auto flex items-center justify-end">
+        <AppButton @click="router.push(`/packages/${id}/select-ship`)">
+          Travel Schedule ->
+        </AppButton>
       </div>
     </div>
   </main>
