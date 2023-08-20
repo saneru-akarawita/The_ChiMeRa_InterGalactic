@@ -24,6 +24,11 @@ import { Roles } from 'src/auth/decorators/role.decorator';
 export class LocationsController {
   constructor(private readonly locationService: LocationsService) {}
 
+  @Get('')
+  getLocations() {
+    return this.locationService.getAllLocations();
+  }
+
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @UseGuards(AccessTokenGuard)

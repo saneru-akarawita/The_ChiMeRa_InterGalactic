@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { FileUploaderService } from '../utilities/file-uploader.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateTravelerDto } from './dto/create-traveler.dto';
+import { Traveler } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -67,6 +68,29 @@ export class UsersService {
         traveler: true,
       },
     });
+  }
+
+  async getTravelerProfile(userId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      include: {
+        traveler: true,
+      },
+    });
+    if (user) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { refresh_token, password, traveler, ...other } = user;
+      const preparedTraveler = {
+        ...traveler,
+        dob: (traveler as Traveler).dob.toString(),
+        ...other,
+      };
+      return preparedTraveler;
+    } else {
+      throw new NotFoundException('User not found');
+    }
   }
 
   async createAdmin(createAdminDto: CreateAdminDto) {

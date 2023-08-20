@@ -63,7 +63,15 @@ export class LocationsService {
   }
 
   async getAllLocations() {
-    return await this.prisma.location.findMany();
+    return await this.prisma.location.findMany({
+      include: {
+        Package: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
   }
 
   async updateLocationyById(
