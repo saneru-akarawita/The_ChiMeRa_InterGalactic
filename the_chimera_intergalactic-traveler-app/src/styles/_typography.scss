@@ -1,0 +1,43 @@
+.heading-1 {
+  color: var(--color-white);
+  font-family: Syne, sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+
+  @include mq(sm) {
+    font-size: 54px;
+  }
+
+  @include mq(xl) {
+    font-size: 80px;
+  }
+}
+
+.heading-3 {
+  color: var(--color-white);
+  font-family: Syne, sans-serif;
+  font-size: 70px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.heading-3 {
+  color: var(--color-white);
+  font-family: Syne, sans-serif;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+p {
+  color: var(--color-white);
+  font-family: Syne;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}

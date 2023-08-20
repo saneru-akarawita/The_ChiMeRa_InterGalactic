@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  dev-db:
+    image: postgres:13
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: the_chimera_intergalactic_dev
+      POSTGRES_PASSWORD: q1w2e3r4
+      POSTGRES_DB: the_chimera_intergalactic_db
+    networks:
+      - mylocal
+networks:
+  mylocal:

@@ -1,0 +1,60 @@
+@import "./variables";
+@import "./mixins";
+@import "./typography";
+
+html,
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: "Syne", sans-serif !important;
+}
+
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: var(--brand-gradient);
+  opacity: 0.75;
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+}
+
+.default-container {
+  @include mq("sm") {
+    max-width: 540px; // Adjust as needed for your design
+  }
+
+  @include mq("md") {
+    max-width: 720px; // Adjust as needed for your design
+  }
+
+  @include mq("lg") {
+    max-width: 960px; // Adjust as needed for your design
+  }
+
+  @include mq("xl") {
+    max-width: 1140px; // Adjust as needed for your design
+  }
+
+  @include mq("2xl") {
+    max-width: 1320px; // Adjust as needed for your design
+  }
+
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
