@@ -18,6 +18,12 @@ import { Response } from 'express';
 @Controller('packages')
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
+
+  @Get('')
+  getAllPackages() {
+    return this.packagesService.getAllPackages();
+  }
+
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @UseGuards(AccessTokenGuard)
