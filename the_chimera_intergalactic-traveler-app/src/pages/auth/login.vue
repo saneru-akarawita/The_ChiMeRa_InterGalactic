@@ -29,7 +29,9 @@ const authStore = useAuthStore()
 const locationsStore = useLocationsStore()
 const packagesStore = usePackagesStore()
 
+const isLoading = ref(false);
 async function onLoginFormSubmit() {
+  isLoading.value = true;
   for (const key in loginFormData.value) {
     const typedValue = loginFormData.value[key as keyof typeof loginFormData.value]
     if (typedValue === null || typedValue === '') {
@@ -62,6 +64,7 @@ async function onLoginFormSubmit() {
   else {
     systemError.value = 'Something went wrong'
   }
+  isLoading.value = false;
 }
 </script>
 
@@ -106,7 +109,7 @@ async function onLoginFormSubmit() {
         <label for="remember_me">Remember me</label>
       </div>
       <AppButton class="w-full">
-        Continue to Login
+        {{ isLoading ? "Submitting" : "Continue to Login"}}
       </AppButton>
       <RouterLink to="/auth/signup">
         Haven't registered yet? <span class="text-[var(--color-blue-purple)]">Join with us</span>

@@ -63,7 +63,9 @@ function loadProfilePicture() {
 }
 
 const router = useRouter()
+const isLoading = ref(false);
 async function onSignupFormSubmit() {
+  isLoading.value = true;
   for (const key in signupFormData.value) {
     if (!signupFormData.value[key as keyof typeof signupFormData.value]) {
       console.log(key)
@@ -83,6 +85,7 @@ async function onSignupFormSubmit() {
   else {
     systemError.value = 'Something went wrong'
   }
+  isLoading.value = false;
 }
 </script>
 
@@ -234,7 +237,7 @@ async function onSignupFormSubmit() {
         Something went wrong
       </p>
       <AppButton class="mt-6 w-full" type="submit">
-        Let's begin the journey !
+        {{isLoading ? "Submitting" : "Let's begin the journey !" }}
       </AppButton>
       <RouterLink to="/auth/login">
         Already have an account ? <span class="text-[var(--color-blue-purple)]">Sign in</span>

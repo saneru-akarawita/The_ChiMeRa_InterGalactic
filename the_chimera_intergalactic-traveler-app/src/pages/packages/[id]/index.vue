@@ -19,7 +19,7 @@ const selectedPackage = computed(() => {
 
 <template>
   <main
-    class="selected-package-page h-[100vh] w-[100vw] flex flex-col justify-between overflow-hidden" :style="{
+    class="selected-package-page min-h-[100vh] w-[100vw] flex flex-col justify-between overflow-y-auto" :style="{
       backgroundImage: `url(${selectedPackage?.location.image})`,
       backgroundPosition: 'center',
       backgroundSize: 'cover',

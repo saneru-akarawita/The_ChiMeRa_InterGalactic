@@ -5,6 +5,16 @@ import { PackageDto } from './dto/packages.dto';
 @Injectable()
 export class PackagesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  getAllPackages() {
+    return this.prisma.package.findMany({
+      include: {
+        location: true,
+        PackageActivity: { include: { activity: true } },
+      },
+    });
+  }
+
   async createPackage(newPackage: PackageDto) {
     const {
       name,
