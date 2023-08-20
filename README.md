@@ -14,6 +14,7 @@ This Repository contains the documentation, code files, readme files, diagrams a
     ```
     git clone https://github.com/saneru-akarawita/The_ChiMeRa_InterGalactic.git
     ```
+- get the env files from the drive link (https://drive.google.com/drive/folders/1GXWybbHJtM7hH2sIw4U0RowGkh5gkoV1?usp=sharing) and adjust it according to your local machine credentials.
 
 ### Setting up the Backend of the Application
 
