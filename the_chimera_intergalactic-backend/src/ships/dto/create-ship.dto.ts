@@ -2,6 +2,7 @@ import {
   IsArray,
   IsInt,
   IsNumber,
+  IsPositive,
   IsString,
   Length,
   ValidateNested,
@@ -37,12 +38,15 @@ export class CreateShipDto {
   readonly ship_picture: string;
 
   @IsInt()
+  @IsPositive()
   readonly first_seat_total: number;
 
   @IsInt()
+  @IsPositive()
   readonly business_seat_total: number;
 
   @IsInt()
+  @IsPositive()
   readonly economy_seat_total: number;
 
   @IsNumber()
