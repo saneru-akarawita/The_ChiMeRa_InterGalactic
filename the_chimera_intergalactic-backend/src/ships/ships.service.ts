@@ -53,23 +53,31 @@ export class ShipsService {
     });
   }
 
-  findShipById(id: string) {
-    return this.prisma.ship.findUnique({
+  async findShipById(id: string) {
+    return await this.prisma.ship.findUnique({
       where: {
         id,
       },
     });
   }
 
-  getAllShips() {
-    return this.prisma.ship.findMany();
+  async getAllShips() {
+    return await this.prisma.ship.findMany();
   }
 
-  filterShips(start: string, end: string) {
-    return this.prisma.ship.findMany({
+  async filterShips(start: string, end: string) {
+    return await this.prisma.ship.findMany({
       where: {
         start,
         end,
+      },
+    });
+  }
+
+  async deleteShip(identifier: string) {
+    return await this.prisma.ship.delete({
+      where: {
+        identifier,
       },
     });
   }
