@@ -9,4 +9,7 @@ export class CreateSeatDto {
 
   @IsNumber()
   readonly num_of_seats: number;
+
+  @IsNumber()
+  readonly price: number;
 }

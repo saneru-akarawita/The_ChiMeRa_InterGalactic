@@ -31,4 +31,9 @@ export class SeatsController {
   getSeatById(@Param('id') id: string) {
     return this.seatsService.findSeatById(id);
   }
+
+  @Get('ship/identifier/:identifier')
+  getSeatsByIdentifier(@Param('identifier') identifier: string) {
+    return this.seatsService.findSeatsByShipIdentifier(identifier);
+  }
 }
