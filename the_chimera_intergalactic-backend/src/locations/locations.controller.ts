@@ -14,6 +14,7 @@ import { LocationsService } from './locations.service';
 import { Location } from '@prisma/client';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { Response } from 'express';
+import { GetCheckpointDto } from './dto/get-checkpoint.dto';
 
 @Controller('locations')
 export class LocationsController {
@@ -23,6 +24,14 @@ export class LocationsController {
   async createLocation(@Body() locationDto: CreateLocationDto) {
     const res = await this.locationService.createLocation(locationDto);
     return res;
+  }
+
+  @Get('calc')
+  async calc(@Body() getCheckpointDto: GetCheckpointDto) {
+    const checkpoints = await this.locationService.getCheckPoints(
+      getCheckpointDto,
+    );
+    return { checkpoints };
   }
 
   @Get(':id')
