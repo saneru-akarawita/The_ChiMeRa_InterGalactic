@@ -18,9 +18,10 @@ defineProps<{
     </h2>
     <div class="flex flex-col gap-4">
       <Package
-        v-for="p in packages" :key="p.id"
-        :start-planet="p.location.destinations[0]" :end-planet="p.location.destinations.at(-1) as string" :price="p.price" :title="p.name"
-        :start-date="new Date('2011-11-11')" :end-date="new Date('2012-12-12')"
+        v-for="p in packages" :id="p.id"
+        :key="p.id" :start-planet="p.location.destinations[0]" :end-planet="p.location.destinations.at(-1) as string" :price="p.price"
+        :title="p.name" :start-date="new Date('2011-11-11')"
+        :end-date="new Date('2012-12-12')"
         :bg-image="p.location.image"
       />
     </div>

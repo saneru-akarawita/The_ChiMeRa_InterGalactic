@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
+
 defineProps<{
+  id: string
   title: string
   price: number
   startPlanet: string
@@ -11,7 +14,8 @@ defineProps<{
 </script>
 
 <template>
-  <div
+  <RouterLink
+    :to="`/packages/${id}`"
     class="package rounded-xl" :style="{
       backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bgImage})`,
       backgroundSize: 'cover',
@@ -44,7 +48,7 @@ defineProps<{
         </div>
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>
 
 <style lang="scss" scoped>
