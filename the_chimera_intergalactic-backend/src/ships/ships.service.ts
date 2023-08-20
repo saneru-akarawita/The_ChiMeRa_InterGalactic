@@ -10,39 +10,52 @@ export class ShipsService {
     private readonly fileUploader: FileUploaderService,
   ) {}
   async createShip(createShipDto: CreateShipDto) {
-    const { name, model, speed, identifier, ship_picture, seats, start, end } =
-      createShipDto;
+    const {
+      name,
+      model,
+      speed,
+      identifier,
+      ship_picture,
+      start,
+      end,
+      first_seat_total,
+      economy_seat_total,
+      business_seat_total,
+      first_seat_price,
+      business_seat_price,
+      economy_seat_price,
+    } = createShipDto;
     let imageUrl;
     if (ship_picture) {
       imageUrl = await this.fileUploader.uploadImageBase64(ship_picture);
     }
 
-    const createdShip = await this.prisma.ship.create({
-      data: {
-        name,
-        model,
-        speed,
-        start,
-        end,
-        identifier,
-        ship_pic: imageUrl ? imageUrl : '',
-      },
-    });
-    seats.map(async (seat) => {
-      for (let i = 0; i < seat.num_of_seats; i++) {
-        const { seat_type, price } = seat;
-        await this.prisma.seat.create({
-          data: {
-            type: seat_type,
-            ship_id: createdShip.id,
-            booking_status: false,
-            price: price,
-          },
-        });
-      }
-    });
+    if (start === end)
+      throw new Error('Start and End cannot be the same location');
 
-    return createdShip;
+    try {
+      const createdShip = await this.prisma.ship.create({
+        data: {
+          name,
+          model,
+          speed,
+          first_seat_price,
+          business_seat_price,
+          economy_seat_price,
+          first_seat_total,
+          business_seat_total,
+          economy_seat_total,
+          identifier,
+          ship_pic: imageUrl ? imageUrl : '',
+          start,
+          end,
+        },
+      });
+      return createdShip;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error while creating ship');
+    }
   }
 
   getShipByIdentifier(identifier: string) {
