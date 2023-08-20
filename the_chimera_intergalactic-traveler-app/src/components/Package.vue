@@ -43,17 +43,6 @@ defineProps<{
           <h3>{{ endPlanet }}</h3>
         </div>
       </div>
-      <div class="package-date">
-        <h3>
-          {{ startDate.toLocaleDateString('en-US', {
-            day: '2-digit',
-            month: 'short',
-          }) }} - {{ endDate.toLocaleDateString('en-US', {
-            day: '2-digit',
-            month: 'short',
-          }) }}
-        </h3>
-      </div>
     </div>
   </div>
 </template>
@@ -97,9 +86,10 @@ defineProps<{
       justify-content: space-between;
       align-items: center;
       .package-path-start {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 0.5rem;
+        width: 100%;
         h3 {
           font-size: 1.1rem;
           font-weight: 500;
@@ -112,9 +102,11 @@ defineProps<{
         background-color: white;
       }
       .package-path-end {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 0.5rem;
+        width: 100%;
+
         h3 {
           font-size: 1.1rem;
           font-weight: 500;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useAuthStore } from '~/stores'
+import { useAuthStore, useLocationsStore, usePackagesStore } from '~/stores'
 import FeaturedLocations from '~/components/FeaturedLocations.vue'
 import FeaturedPackages from '~/components/FeaturedPackages.vue'
 
@@ -10,6 +10,12 @@ defineOptions({
 
 const authStore = useAuthStore()
 const { isLoggedIn, profile } = storeToRefs(authStore)
+
+const locationsStore = useLocationsStore()
+const { locations } = storeToRefs(locationsStore)
+
+const packagesStore = usePackagesStore()
+const { packages } = storeToRefs(packagesStore)
 </script>
 
 <template>
@@ -45,8 +51,8 @@ const { isLoggedIn, profile } = storeToRefs(authStore)
     <h1 class="text-[24px] font-[700]">
       Explore the breath-taking Universe...
     </h1>
-    <FeaturedLocations />
-    <FeaturedPackages />
+    <FeaturedLocations :locations="locations" />
+    <FeaturedPackages :packages="packages" />
   </main>
 </template>
 
