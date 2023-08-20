@@ -42,8 +42,45 @@ export class PackagesService {
       throw error;
     }
   }
-  async retrievePackages() {
-    return 'retrieve package';
+  async retrievePackagesByLocation(location_id: string) {
+    try {
+      const packages = await this.prisma.package.findMany({
+        where: {
+          location_id,
+        },
+        include: {
+          PackageActivity: {
+            include: {
+              activity: true,
+            },
+          },
+        },
+      });
+      return packages;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  async retrieveSinglePackage(package_id: string) {
+    try {
+      const singlePackage = await this.prisma.package.findUnique({
+        where: {
+          id: package_id,
+        },
+        include: {
+          PackageActivity: {
+            include: {
+              activity: true,
+            },
+          },
+        },
+      });
+      return singlePackage;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
   async deletePackage(deletePackage: DeletePackageDto) {
     const package_id = deletePackage.package_id;

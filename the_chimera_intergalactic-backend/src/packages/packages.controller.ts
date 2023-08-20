@@ -15,6 +15,10 @@ import { PackagesService } from './packages.service';
 import { PackageDto } from './dto/packages.dto';
 import { Response } from 'express';
 import { DeletePackageDto } from './dto/packages.delete.dto';
+import {
+  PackageGetByLocationDto,
+  PackageGetSingleDto,
+} from './dto/packages.get.dto';
 
 @Controller('package')
 export class PackagesController {
@@ -40,9 +44,40 @@ export class PackagesController {
       });
   }
   @UseGuards(AccessTokenGuard)
-  @Get('retrieve')
-  async retrievePackages() {
-    return this.packagesService.retrievePackages();
+  @Get('get/location')
+  async retrievePackagesByLocation(
+    @Query() query: PackageGetByLocationDto,
+    @Res() res: Response,
+  ) {
+    this.packagesService
+      .retrievePackagesByLocation(query.location_id)
+      .then((packages) => {
+        console.log(packages);
+        res.send(packages);
+      })
+      .catch(() => {
+        res.status(500).send({
+          message: 'Unable to save package on database',
+        });
+      });
+  }
+  @UseGuards(AccessTokenGuard)
+  @Get('get/single')
+  async retrieveSinglePackage(
+    @Query() query: PackageGetSingleDto,
+    @Res() res: Response,
+  ) {
+    this.packagesService
+      .retrieveSinglePackage(query.package_id)
+      .then((data) => {
+        console.log(data);
+        res.send(data);
+      })
+      .catch(() => {
+        res.status(500).send({
+          message: 'Unable to save package on database',
+        });
+      });
   }
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
@@ -60,10 +95,11 @@ export class PackagesController {
           res.status(404).send({
             message: 'Package for given id is not found',
           });
+        } else {
+          res.send({
+            message: 'Package deleted successfully',
+          });
         }
-        res.send({
-          message: 'Package deleted successfully',
-        });
       })
       .catch(() => {
         res.status(500).send({
