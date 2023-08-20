@@ -1,4 +1,4 @@
-export class UpdateActivityDto {
-  readonly name: string | undefined;
-  readonly description: string | undefined;
-}
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateActivityDto } from './create-activity.dto';
+
+export class UpdateActivityDto extends PartialType(CreateActivityDto) {}
