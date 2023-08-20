@@ -84,6 +84,9 @@ export class BookingsController {
         });
       });
   }
+  @Roles('TRAVELER')
+  @UseGuards(RolesGuard)
+  @UseGuards(AccessTokenGuard)
   @Patch('cancel/:booking_id')
   async cancelBooking(
     @Param('booking_id') booking_id: string,

@@ -1,4 +1,5 @@
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { SeatType } from '@prisma/client';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateBookingDto {
   @IsString()
@@ -7,15 +8,12 @@ export class CreateBookingDto {
   })
   readonly package_id: string;
 
-  @IsDateString()
-  @IsNotEmpty({
-    message: 'Starting date is required',
-  })
-  readonly starting_date: Date;
-
   @IsString()
   @IsNotEmpty({
     message: 'Seat id is required',
   })
-  readonly seat_id: string;
+  readonly ship_id: string;
+
+  @IsEnum(SeatType)
+  readonly seat_type: SeatType;
 }
