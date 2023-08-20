@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   Res,
@@ -74,6 +75,25 @@ export class BookingsController {
       .then((result) => {
         res.status(200).json({
           message: 'Booking retrieved successfully',
+          data: result,
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          message: err.message,
+        });
+      });
+  }
+  @Patch('cancel/:booking_id')
+  async cancelBooking(
+    @Param('booking_id') booking_id: string,
+    @Res() res: Response,
+  ) {
+    this.bookingsService
+      .cancelBooking(booking_id)
+      .then((result) => {
+        res.status(200).json({
+          message: 'Booking cancelled successfully',
           data: result,
         });
       })

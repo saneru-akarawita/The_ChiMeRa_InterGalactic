@@ -109,4 +109,37 @@ export class BookingsService {
       throw new Error('Error while fetching booking');
     }
   }
+  async cancelBooking(booking_id: string) {
+    try {
+      const booking = await this.prisma.booking.findUnique({
+        where: {
+          id: booking_id,
+        },
+        include: {
+          package: true,
+          seat: true,
+        },
+      });
+      if (!booking) {
+        throw new Error('Booking not found');
+      }
+      const seat = await this.prisma.seat.update({
+        where: {
+          id: booking.seat_id,
+        },
+        data: {
+          booking_status: false,
+        },
+      });
+      const deletedBooking = await this.prisma.booking.delete({
+        where: {
+          id: booking_id,
+        },
+      });
+      return { deletedBooking, seat };
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error while fetching booking');
+    }
+  }
 }
