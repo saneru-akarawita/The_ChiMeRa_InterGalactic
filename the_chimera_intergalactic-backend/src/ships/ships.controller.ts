@@ -1,16 +1,17 @@
 import {
-  Controller,
-  Post,
   Body,
-  Res,
+  Controller,
+  Delete,
   Get,
-  Param,
-  UseGuards,
   HttpStatus,
+  Param,
+  Post,
+  Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ShipsService } from './ships.service';
 import { CreateShipDto } from './dto/create-ship.dto';
-import { Response, Request, response } from 'express';
+import { Response } from 'express';
 import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/decorators/role.decorator';
@@ -34,7 +35,7 @@ export class ShipsController {
   @Roles('TRAVELER', 'ADMIN')
   @UseGuards(RolesGuard)
   @UseGuards(AccessTokenGuard)
-  @Get(':identifier')
+  @Get('ship/:identifier')
   async getShipByIdentifier(@Param('identifier') identifier: string) {
     return await this.shipService.getShipByIdentifier(identifier);
   }
@@ -44,13 +45,17 @@ export class ShipsController {
   @UseGuards(AccessTokenGuard)
   @Get('all')
   async getAllShips() {
-    return await this.shipService.getAllShips();
+    try {
+      return await this.shipService.getAllShips();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   @Roles('TRAVELER', 'ADMIN')
   @UseGuards(RolesGuard)
   @UseGuards(AccessTokenGuard)
-  @Get(':stat/:end')
+  @Get('filter/:stat/:end')
   async filterShips(@Param('start') start: string, @Param('end') end: string) {
     return await this.shipService.filterShips(start, end);
   }
@@ -58,6 +63,7 @@ export class ShipsController {
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @UseGuards(AccessTokenGuard)
+  @Delete('delete/:identifier')
   async deleteShip(
     @Param('identifier') identifier: string,
     @Res() response: Response,
