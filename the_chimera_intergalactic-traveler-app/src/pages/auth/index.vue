@@ -2,6 +2,7 @@
 import { RouterLink } from 'vue-router'
 import logo from '~/assets/images/logos/logo.svg'
 import stars from '~/assets/images/icons/star.svg'
+import AppButton from '~/components/common/AppButton.vue'
 
 defineOptions({
   name: 'AuthIndexPage',

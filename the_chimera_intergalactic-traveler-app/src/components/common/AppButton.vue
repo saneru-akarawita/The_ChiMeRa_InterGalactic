@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, toRefs } from 'vue'
+
 const props = withDefaults(defineProps<{
   mode?: 'outline' | 'solid'
 }>(), {
@@ -42,6 +44,7 @@ const btn = ref<HTMLButtonElement>()
       padding: 0.55rem 1.5rem;
       background-image: var(--brand-gradient);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       display: block;
       border-radius: 0.4rem;

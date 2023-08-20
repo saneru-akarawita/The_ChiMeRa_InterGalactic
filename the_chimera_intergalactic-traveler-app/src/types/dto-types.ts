@@ -10,11 +10,24 @@ export interface SignupDto {
   terms: boolean
 }
 
-export interface SignupErrorResponseForInvalidData {
+export interface LoginDto {
+  email: string
+  password: string
+  remember_me: boolean
+}
+
+export interface ResponseForInvalidData<DtoType> {
   errorMessages: {
-    property: keyof SignupDto
+    property: keyof DtoType
     messages: string[]
   } []
   error: string
   statusCode: number
+}
+
+export type SignupErrorResponseForInvalidData = ResponseForInvalidData<SignupDto>
+export type LoginErrorResponseForInvalidData = ResponseForInvalidData<LoginDto>
+
+export interface LoginSuccessfulResponse {
+  accessToken: string
 }
